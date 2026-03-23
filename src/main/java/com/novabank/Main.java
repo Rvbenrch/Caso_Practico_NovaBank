@@ -4,6 +4,7 @@ import main.java.com.novabank.model.Cliente;
 import main.java.com.novabank.repository.ClienteRepository;
 import main.java.com.novabank.service.ClienteService;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -73,9 +74,10 @@ public class Main {
             System.out.println("4. Volver");
             System.out.print("Seleccione una opción: ");
 
+
             opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
-
+            System.out.println("-------------------------");
             switch (opcion) {
 
                 case 1:
@@ -95,6 +97,7 @@ public class Main {
                         System.out.print("Teléfono: ");
                         String telefono = scanner.nextLine();
 
+                        System.out.println("-------------------------");
                         Cliente cliente = clienteService.crearCliente(nombre, apellidos, dni, email, telefono);
                         System.out.println("Cliente creado correctamente.");
                         System.out.println("ID cliente: " + cliente.getId() + " y su nombre completo es: ");
@@ -119,25 +122,64 @@ public class Main {
                         System.out.print("Introduzca el ID: ");
                         long id = scanner.nextLong();
                         scanner.nextLine();
-                        System.out.println("El cliente al que le corresponde el ID: " + clienteService.encontrarPorId(id).getNombre() + " " + clienteService.encontrarPorId(id).getApellidos());
+                        Cliente cliente = clienteService.encontrarPorId(id);
 
+                        if (cliente != null) {
+                            System.out.println("Cliente encontrado:");
+                            System.out.println("ID: " + cliente.getId());
+                            System.out.println("Nombre: " + cliente.getNombre() + " " + cliente.getApellidos());
+                            System.out.println("DNI: " + cliente.getDni());
+                            System.out.println("Email: " + cliente.getEmail());
+                            System.out.println("Teléfono: " + cliente.getTelefono());
+                        } else {
+                            System.out.println("ERROR: No se encontró ningún cliente con ID " + id);
+                        }
 
 
                     } else if (opcionBusqueda == 2) {
                         System.out.print("Introduzca el DNI: ");
                         String dni = scanner.nextLine();
 
-                        System.out.println(clienteService.encontrarPorDni(dni).getNombre() + " " +  clienteService.encontrarPorDni(dni).getApellidos() + " tiene el dni: " + clienteService.encontrarPorDni(dni).getDni());
+                        Cliente cliente = clienteService.encontrarPorDni(dni);
 
+                        if (cliente != null) {
+                            System.out.println("--------------------------");
+                            System.out.println("Cliente encontrado:");
+                            System.out.println("ID: " + cliente.getId());
+                            System.out.println("Nombre: " + cliente.getNombre() + " " + cliente.getApellidos());
+                            System.out.println("DNI: " + cliente.getDni());
+                            System.out.println("Email: " + cliente.getEmail());
+                            System.out.println("Teléfono: " + cliente.getTelefono());
+                        } else {
+                            System.out.println("ERROR: No se encontró ningún cliente con ID " + dni);
+                        }
                     } else {
                         System.out.println("Opción inválida.");
+                        System.out.println("-------------------------");
                     }
 
                     break;
 
                 case 3:
-                    System.out.println("Listar clientes - pendiente de implementar");
+
+                    List<Cliente> clientes = clienteService.listarClientes();
+
+                    if (clientes.isEmpty()) {
+                        System.out.println("No hay clientes registrados.");
+                    } else {
+                        for (Cliente cliente : clientes) {
+                            System.out.println("Cliente número " +cliente.getId());
+                            System.out.println("ID: " + cliente.getId());
+                            System.out.println("Nombre: " + cliente.getNombre() + " " + cliente.getApellidos());
+                            System.out.println("DNI: " + cliente.getDni());
+                            System.out.println("Email: " + cliente.getEmail());
+                            System.out.println("Teléfono: " + cliente.getTelefono());
+                            System.out.println("----------------------------");
+                        }
+                    }
+
                     break;
+
                 case 4:
                     System.out.println("Volviendo al menú principal...");
                     break;

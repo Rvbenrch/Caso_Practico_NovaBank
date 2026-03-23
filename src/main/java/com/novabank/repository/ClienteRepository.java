@@ -49,6 +49,11 @@ public class ClienteRepository {
         return null;
     }
 
+    public List<Cliente> buscarTodos() {
+        return clientes;
+    }
+
+
 
 
 }
