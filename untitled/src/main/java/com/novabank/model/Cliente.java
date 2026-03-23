@@ -2,6 +2,7 @@ package com.novabank.model;
 
 public class Cliente {
     private Long id;
+    private static Long contadorId = 1L;
     private String nombre;
     private String apellidos;
     private String dni;
@@ -9,6 +10,7 @@ public class Cliente {
     private String telefono;
 
     public Cliente(String nombre, String apellidos, String dni, String email, String telefono) {
+        this.id = contadorId++;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.dni = dni;
@@ -40,9 +42,6 @@ public class Cliente {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
