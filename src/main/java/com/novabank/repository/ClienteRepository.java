@@ -1,6 +1,6 @@
-package com.novabank.repository;
+package main.java.com.novabank.repository;
 
-import com.novabank.model.Cliente;
+import main.java.com.novabank.model.Cliente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,15 @@ public class ClienteRepository {
         }
         return null;
     }
+    public Cliente buscarPorId(long id) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getId() == id) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+
 
 
 }

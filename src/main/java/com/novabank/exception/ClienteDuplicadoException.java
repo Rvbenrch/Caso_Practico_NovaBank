@@ -1,4 +1,4 @@
-package com.novabank.exception;
+package main.java.com.novabank.exception;
 
 
 public class ClienteDuplicadoException extends RuntimeException {

@@ -1,4 +1,4 @@
-package com.novabank.model;
+package main.java.com.novabank.model;
 
 public class Cliente {
     private Long id;
