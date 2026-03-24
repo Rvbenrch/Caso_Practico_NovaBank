@@ -4,7 +4,11 @@ import main.java.com.novabank.exception.ClienteNoEncontradoException;
 import main.java.com.novabank.exception.CuentaNoEncontrada;
 import main.java.com.novabank.model.Cliente;
 import main.java.com.novabank.model.Cuenta;
+import main.java.com.novabank.model.TipoMovimiento;
 import main.java.com.novabank.repository.CuentaRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CuentaService {
     private CuentaRepository cuentaRepository;
@@ -38,6 +42,65 @@ public class CuentaService {
         }else{
             return cuenta;
         }
+
     }
+    public List<Cuenta> listarCuentasPorCliente(Long clienteId) {
+
+        Cliente cliente = clienteService.encontrarPorId(clienteId);
+
+        if (cliente == null) {
+            throw new ClienteNoEncontradoException("Cliente no encontrado.");
+        }
+
+        return cuentaRepository.buscarPorClienteId(clienteId);
+    }
+
+    public void transferir(String numeroOrigen, String numeroDestino, double cantidad) {
+
+        Cuenta origen = buscarPorNumeroCuenta(numeroOrigen);
+        Cuenta destino = buscarPorNumeroCuenta(numeroDestino);
+
+        if (origen.equals(destino)) {
+            throw new IllegalArgumentException("No se puede transferir a la misma cuenta.");
+        }
+        boolean dineroMovido = false;
+
+        try {
+
+            origen.debitar(cantidad);
+            destino.acreditar(cantidad);
+            dineroMovido = true;
+
+            origen.registrarMovimiento(TipoMovimiento.TRANSFERENCIA_SALIENTE,cantidad);
+            destino.registrarMovimiento(TipoMovimiento.TRANSFERENCIA_ENTRANTE,cantidad);
+
+        } catch (Exception e) {
+
+            if (dineroMovido) {
+                origen.acreditar(cantidad);
+                destino.debitar(cantidad);
+            }
+
+            throw new RuntimeException("Error en la transferencia. Operación revertida.");
+        }
+
+
+    }
+    public Cuenta ingresar(String numeroCuenta, double cantidad) {
+
+        Cuenta cuenta = buscarPorNumeroCuenta(numeroCuenta);
+
+        cuenta.depositoDinero(cantidad);
+        cuenta.registrarMovimiento(TipoMovimiento.DEPOSITO, cantidad);
+
+        return cuenta;
+    }
+
+
+    public void retirar(String numeroCuenta, double cantidad) {
+        Cuenta cuenta = buscarPorNumeroCuenta(numeroCuenta);
+        cuenta.retirarDinero(cantidad);
+    }
+
 
 }

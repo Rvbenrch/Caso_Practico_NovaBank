@@ -1,13 +1,12 @@
 package main.java.com.novabank;
 
-import main.java.com.novabank.model.Cliente;
-import main.java.com.novabank.model.Cuenta;
+import main.java.com.novabank.menus.MenuCuentas;
+import main.java.com.novabank.menus.MenuOperaciones;
 import main.java.com.novabank.repository.ClienteRepository;
 import main.java.com.novabank.repository.CuentaRepository;
 import main.java.com.novabank.service.ClienteService;
 import main.java.com.novabank.service.CuentaService;
 
-import java.util.List;
 import java.util.Scanner;
 
 import static main.java.com.novabank.menus.MenuCliente.menuClientes;
@@ -16,14 +15,18 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Scanner scanner = new Scanner(System.in);
+
         ClienteRepository clienteRepository = new ClienteRepository();
         CuentaRepository cuentaRepository = new CuentaRepository();
+
         ClienteService clienteService = new ClienteService(clienteRepository);
         CuentaService cuentaService = new CuentaService(cuentaRepository, clienteService);
 
-        Scanner scanner = new Scanner(System.in);
-        int opcion;
+        MenuOperaciones menuOperaciones =
+                new MenuOperaciones(scanner, cuentaService);
 
+        int opcion;
 
         // MENU PRINCIPAL
         do {
@@ -44,18 +47,25 @@ public class Main {
                 case 1:
                     menuClientes(scanner, clienteService, cuentaService);
                     break;
+
                 case 2:
-                    System.out.println("Funcionalidad aún no implementada.");
+                    MenuCuentas menuCuentas =
+                            new MenuCuentas(scanner, cuentaService, clienteService);
+                    menuCuentas.mostrar();
                     break;
+
                 case 3:
-                    System.out.println("Funcionalidad aún no implementada.");
+                    menuOperaciones.mostrar();
                     break;
+
                 case 4:
                     System.out.println("Funcionalidad aún no implementada.");
                     break;
+
                 case 5:
                     System.out.println("Saliendo del sistema...");
                     break;
+
                 default:
                     System.out.println("Opción inválida.");
             }
@@ -64,8 +74,4 @@ public class Main {
 
         scanner.close();
     }
-
-
-
 }
-
