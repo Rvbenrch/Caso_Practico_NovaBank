@@ -1,15 +1,15 @@
 package com.novabank;
 
-import main.java.com.novabank.menus.MenuCuentas;
-import main.java.com.novabank.menus.MenuOperaciones;
-import main.java.com.novabank.repository.ClienteRepository;
-import main.java.com.novabank.repository.CuentaRepository;
+import com.novabank.menus.MenuCuentas;
+import com.novabank.menus.MenuOperaciones;
+import com.novabank.repository.ClienteRepository;
+import com.novabank.repository.CuentaRepository;
 import com.novabank.service.ClienteService;
-import main.java.com.novabank.service.CuentaService;
+import com.novabank.service.CuentaService;
 
 import java.util.Scanner;
 
-import static main.java.com.novabank.menus.MenuCliente.menuClientes;
+import static com.novabank.menus.MenuCliente.menuClientes;
 
 public class Main {
 
