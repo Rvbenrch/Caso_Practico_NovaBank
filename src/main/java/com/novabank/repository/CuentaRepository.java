@@ -1,6 +1,6 @@
-package main.java.com.novabank.repository;
+package com.novabank.repository;
 
-import main.java.com.novabank.model.Cuenta;
+import com.novabank.model.Cuenta;
 import java.util.ArrayList;
 import java.util.List;
 

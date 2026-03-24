@@ -1,4 +1,4 @@
-package main.java.com.novabank.model;
+package com.novabank.model;
 
 import java.time.LocalDateTime;
 

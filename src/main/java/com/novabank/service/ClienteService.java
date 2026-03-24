@@ -1,8 +1,8 @@
-package main.java.com.novabank.service;
+package com.novabank.service;
 
-import main.java.com.novabank.exception.ClienteDuplicadoException;
-import main.java.com.novabank.model.Cliente;
-import main.java.com.novabank.repository.ClienteRepository;
+import com.novabank.exception.ClienteDuplicadoException;
+import com.novabank.model.Cliente;
+import com.novabank.repository.ClienteRepository;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package main.java.com.novabank.model;
+package com.novabank.model;
 
 public enum TipoMovimiento {
     DEPOSITO,RETIRO,TRANSFERENCIA_SALIENTE,TRANSFERENCIA_ENTRANTE;

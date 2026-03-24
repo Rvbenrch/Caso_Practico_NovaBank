@@ -1,13 +1,13 @@
-package main.java.com.novabank.service;
+package com.novabank.service;
 
-import main.java.com.novabank.exception.ClienteNoEncontradoException;
-import main.java.com.novabank.exception.CuentaNoEncontrada;
-import main.java.com.novabank.model.Cliente;
-import main.java.com.novabank.model.Cuenta;
-import main.java.com.novabank.model.TipoMovimiento;
-import main.java.com.novabank.repository.CuentaRepository;
+import com.novabank.service.ClienteService;
+import com.novabank.exception.ClienteNoEncontradoException;
+import com.novabank.exception.CuentaNoEncontrada;
+import com.novabank.model.Cliente;
+import com.novabank.model.Cuenta;
+import com.novabank.model.TipoMovimiento;
+import com.novabank.repository.CuentaRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CuentaService {

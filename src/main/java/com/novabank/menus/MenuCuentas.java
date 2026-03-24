@@ -1,12 +1,11 @@
-package main.java.com.novabank.menus;
+package com.novabank.menus;
 
-import main.java.com.novabank.model.Cliente;
-import main.java.com.novabank.model.Cuenta;
-import main.java.com.novabank.service.ClienteService;
-import main.java.com.novabank.service.CuentaService;
+import com.novabank.model.Cliente;
+import com.novabank.model.Cuenta;
+import com.novabank.service.ClienteService;
+import com.novabank.service.CuentaService;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 

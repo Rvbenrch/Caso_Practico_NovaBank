@@ -1,10 +1,10 @@
-package main.java.com.novabank;
+package com.novabank;
 
 import main.java.com.novabank.menus.MenuCuentas;
 import main.java.com.novabank.menus.MenuOperaciones;
 import main.java.com.novabank.repository.ClienteRepository;
 import main.java.com.novabank.repository.CuentaRepository;
-import main.java.com.novabank.service.ClienteService;
+import com.novabank.service.ClienteService;
 import main.java.com.novabank.service.CuentaService;
 
 import java.util.Scanner;

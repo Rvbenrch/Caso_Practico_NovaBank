@@ -1,7 +1,7 @@
-package main.java.com.novabank.menus;
+package com.novabank.menus;
 
-import main.java.com.novabank.model.Cuenta;
-import main.java.com.novabank.service.CuentaService;
+import com.novabank.model.Cuenta;
+import com.novabank.service.CuentaService;
 
 import java.util.Scanner;
 

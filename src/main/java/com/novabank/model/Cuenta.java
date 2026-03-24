@@ -1,15 +1,13 @@
-package main.java.com.novabank.model;
+package com.novabank.model;
 
-import main.java.com.novabank.exception.ClienteNoPuedeDepositar;
-import main.java.com.novabank.exception.ClienteNoPuedeRetirar;
-import main.java.com.novabank.service.ClienteService;
-import main.java.com.novabank.service.CuentaService;
+import com.novabank.exception.ClienteNoPuedeDepositar;
+import com.novabank.exception.ClienteNoPuedeRetirar;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-import static main.java.com.novabank.model.TipoMovimiento.*;
+import static com.novabank.model.TipoMovimiento.*;
 
 public class Cuenta {
 
