@@ -1,0 +1,8 @@
+package main.java.com.novabank.exception;
+
+public class ClienteNoEncontradoException extends RuntimeException {
+
+    public ClienteNoEncontradoException(String mensaje) {
+        super(mensaje);
+    }
+}

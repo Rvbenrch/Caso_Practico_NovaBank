@@ -11,6 +11,7 @@ public class ClienteService {
     private ClienteRepository repository;
 
     public ClienteService(ClienteRepository repository) {
+
         this.repository = repository;
     }
     public Cliente crearCliente(String nombre, String apellidos, String dni, String email, String telefono){
@@ -28,7 +29,7 @@ public class ClienteService {
         }
 
         if (!email.contains("@") || !email.contains(".")){
-            throw new IllegalArgumentException("El email no tiene un formato válido.");
+            throw new IllegalArgumentException("El email no tiene un formato válido. \n El formato del email tiene que ser: ejemplo@dominio.com");
         }
 
         Cliente cliente = new Cliente(nombre, apellidos, dni, email, telefono);
