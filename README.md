@@ -1,4 +1,5 @@
 # NovaBank
+---
 ## Descripción
 Para el desarrollo del banco NovaBank perteneciente a la actividad de la empresa NttData, en el ámbito de formación se ha requerido la creación de una aplicación en Java, en la que se han hecho uso de los principios generales que toda aplicación debe tener:
 
@@ -21,7 +22,11 @@ Para el desarrollo del banco NovaBank perteneciente a la actividad de la empresa
 
 </details>
 
+---
+
 ## Funcionalidad de cada clase
+
+---
 <details>
     <summary>Packete Model</summary>
    El paquete model  tiene como finalidad encapsular las entidades principales del dominio y las operaciones asociadas a las mismas.
@@ -195,9 +200,41 @@ Las funciones que se han realizado en la clase **CuentaService** son:
   - retirar()
   - transferirA()
 
+
+</details>
+<details><summary>Clase Consulta</summary>
+Esta clase tiene como objetivo poder consultar la información que se queda registrada en clase Cuentas para poder acceder más tarde desde el menú.
+
+Necesitamos la variable que proviene desde **CuentaService** para poder acceder a la información que tenemos de cada cuenta, las funciones que nos permite esta clase realizar son las siguientes:
+
+- consultarSaldo(numeroCuenta).
+- obtenerHistorial(numeroCuenta), se ven todos los movimientos de esa cuenta registrados en una lista.
+- obtenerMovimientosPorRango(numeroCuenta, fecha_inicio, fecha_fin), como teníamos guardada la variable de fecha, podemos ver las actividad de una cuenta entre dos rangos de valores que en este caso es fecha.
+
+
+
+
+</details>
 </div>
 </details>
-</details>
 
+---
 
+Los menús interactivos de cada sección fueron creados de manera independiente, quedando creados los siguientes:
 
+- MenuCliente
+- MenuConsultas
+- MenuCuentas
+- MenuOperaciones
+
+Y desde el **Main** llamamos al menú que le corresponda aparecer por pantalla.
+
+---
+
+### Uso de Inteligencia Artificial como herramienta
+
+Durante el desarrollo de esta actividad se ha empleado Inteligencia Artificial como herramienta de apoyo técnico y consultivo. Su utilización ha estado orientada principalmente a contrastar decisiones de diseño, validar enfoques arquitectónicos y asegurar que las soluciones adoptadas estuvieran alineadas con buenas prácticas de desarrollo.
+
+Asimismo, se han realizado consultas puntuales para la revisión de código previamente implementado, con el objetivo de detectar posibles errores de implementación, inconsistencias lógicas o mejoras estructurales. Estas revisiones han tenido un carácter complementario y no sustitutivo del análisis propio.
+
+Todas las decisiones técnicas, modificaciones y validaciones finales del código han sido realizadas y supervisadas por el autor. En consecuencia, asumo la responsabilidad íntegra sobre el diseño, la implementación y cualquier posible error que pudiera existir en el presente proyecto.
