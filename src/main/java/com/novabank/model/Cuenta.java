@@ -59,12 +59,19 @@ public class Cuenta {
             throw new IllegalArgumentException("No puedes transferir a la misma cuenta");
         }
 
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("Cantidad inválida");
+        }
 
-        this.retirar(cantidad);
+        if (this.saldo < cantidad) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
 
+        // Actualizar saldos directamente (SIN llamar a retirar/ingresar)
+        this.saldo -= cantidad;
+        destino.saldo += cantidad;
 
-        destino.ingresar(cantidad);
-
+        // Registrar SOLO movimientos de transferencia
         this.movimientos.add(new Movimiento(TRANSFERENCIA_SALIENTE, cantidad));
         destino.movimientos.add(new Movimiento(TRANSFERENCIA_ENTRANTE, cantidad));
     }

@@ -33,7 +33,7 @@ Dentro de este paquete se definen las reglas que gobiernan el comportamiento de 
 - Transferencia entre cuentas.
 
 Estas operaciones no solo modifican el estado interno de las entidades, sino que también garantizan la coherencia del sistema aplicando las validaciones necesarias y registrando los movimientos correspondientes.
-
+<div style="margin-left:20px;">
 <details>
     <summary>Clase Cuenta</summary>
 
@@ -60,6 +60,7 @@ En esta clase y después de cada método, dependiendo del método que realicemos
 
 </details>
 
+
 <details>
     <summary> Clase Cliente</summary>
 Esta clase nos permite registrar a los clientes, para ello hemos necesitado guardar las siguientes variables:
@@ -77,6 +78,7 @@ La clase cliente también cuenta con los gettes y Setters de algunos de los atri
 
 </details>
 
+
 <details><summary>Clase Movimiento</summary>
 
 En la clase movimiento hemos definido 3 variables, teniendo en cuenta que hay otra clase Enum que tiene que inicializarse antes.
@@ -91,9 +93,17 @@ El constructor cuenta con las variables tipo e importe. Aunque dentro usamos tam
 Hemos creado los getters de las variables TipoMovimiento, Importe y getFecha().
 
 
+</div>
+</details>
+</details>
 
-</details>
-</details>
+
+
+
+
+
+
+
 
 <details><summary>Packete Repository</summary>
 
@@ -104,6 +114,7 @@ Dentro de este packete vamos a encontrar dos clases:
 
 Estas clases han sido usadas como almacenamiento, es el lugar dónde se ha implementado el uso de los Map, con la finalidad de poder realizar búsquedas rápidas.
 
+<div style="margin-left:20px;">
 <details><summary>Clase Cliente Repository</summary>
 
 En esta clase hemos creado las siguientes variables, todas ellas haciendo uso de Map, new HashMap, la finalidad de usar esta función es poder acceder a los datos de manera más rápida, creando "etiquetas" para el conjunto de datos dado.
@@ -136,7 +147,7 @@ También tenemos un buscarPorClienteID(id), en el que vamos recorriendo cada val
 
 </details>
 
-
+</div>
 </details>
 
 <details><summary>Packete Service</summary>
@@ -146,6 +157,7 @@ En este packete vamos a encontrar las siguientes clases:
 - ClienteService
 - CuentaService
 
+<div style="margin-left:20px;">
 <details><summary>Clase ClienteService</summary>
 En esta clase se elaboran tanto las validaciones de los requisitos como la lógica de la creación del cliente.
 Como variables hemos traído el paquete de Cliente repository, con el objetivo de poder acceder a todas las funciones que hemos creado anteriormente y usarlas para validar que las operaciones financieras se estén realizando de manera correcta, sin tener saldos en negativo por ejemplo.
@@ -181,7 +193,9 @@ Las funciones que se han realizado en la clase **CuentaService** son:
 - Operaciones
   - ingresar()
   - retirar()
-  - transferirA(), esta
+  - transferirA()
+
+</div>
 </details>
 </details>
 
