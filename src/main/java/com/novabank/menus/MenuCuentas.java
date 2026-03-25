@@ -1,7 +1,6 @@
 package com.novabank.menus;
 
 import com.novabank.exception.ClienteNoEncontradoException;
-import com.novabank.model.Cliente;
 import com.novabank.model.Cuenta;
 import com.novabank.service.ClienteService;
 import com.novabank.service.CuentaService;
@@ -24,6 +23,7 @@ public class MenuCuentas {
 
     public void mostrar() {
         int opcion;
+
         do {
             System.out.println("\n--- GESTIÓN DE CUENTAS ---");
             System.out.println("1. Crear cuenta");
@@ -55,34 +55,40 @@ public class MenuCuentas {
     }
 
     private void crearCuenta() {
-        System.out.print("Introduzca ID del cliente: ");
-        long clienteId = Long.parseLong(scanner.nextLine());
-
         try {
+            System.out.print("Introduzca ID del cliente: ");
+            long clienteId = Long.parseLong(scanner.nextLine());
+
             Cuenta cuenta = cuentaService.crearCuenta(clienteId);
+
             System.out.println("\nCuenta creada correctamente:");
             mostrarCuentaResumen(cuenta);
+
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
 
     private void listarCuentasCliente() {
-        System.out.print("Introduzca ID del cliente: ");
-        long clienteId = Long.parseLong(scanner.nextLine());
-
         try {
+            System.out.print("Introduzca ID del cliente: ");
+            long clienteId = Long.parseLong(scanner.nextLine());
+
             List<Cuenta> cuentas = cuentaService.listarCuentasPorCliente(clienteId);
+
             if (cuentas.isEmpty()) {
                 System.out.println("El cliente no tiene cuentas.");
                 return;
             }
 
             System.out.println("\nCuentas del cliente:");
-            System.out.printf("%-28s | %-10s%n", "Número de cuenta", "Saldo");
-            System.out.println("-----------------------------|------------");
+            System.out.printf("%-28s | %-12s%n", "Número de cuenta", "Saldo");
+            System.out.println("-----------------------------|--------------");
+
             for (Cuenta c : cuentas) {
-                System.out.printf("%-28s | %s%n", c.getNumeroCuenta(), formatearSaldo(c.getSaldo()));
+                System.out.printf("%-28s | %-12s%n",
+                        c.getNumeroCuenta(),
+                        formatearSaldo(c.getSaldo()));
             }
 
         } catch (ClienteNoEncontradoException e) {
@@ -91,13 +97,13 @@ public class MenuCuentas {
     }
 
     private void verCuenta() {
-        System.out.print("Introduzca número de cuenta: ");
-        String numeroCuenta = scanner.nextLine();
-
         try {
+            System.out.print("Introduzca número de cuenta: ");
+            String numeroCuenta = scanner.nextLine();
+
             Cuenta cuenta = cuentaService.buscarPorNumeroCuenta(numeroCuenta);
 
-            System.out.println("Información de la cuenta:");
+            System.out.println("\n--- INFORMACIÓN DE CUENTA ---");
             mostrarCuentaResumen(cuenta);
 
         } catch (Exception e) {
@@ -107,6 +113,7 @@ public class MenuCuentas {
 
     private void mostrarCuentaResumen(Cuenta cuenta) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         System.out.println("Número de cuenta: " + cuenta.getNumeroCuenta());
         System.out.println("Titular: " + cuenta.getTitular().getNombre() + " " + cuenta.getTitular().getApellidos());
         System.out.println("Saldo: " + formatearSaldo(cuenta.getSaldo()));

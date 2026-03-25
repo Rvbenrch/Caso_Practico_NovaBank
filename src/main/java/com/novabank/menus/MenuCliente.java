@@ -2,17 +2,21 @@ package com.novabank.menus;
 
 import com.novabank.model.Cliente;
 import com.novabank.service.ClienteService;
-import com.novabank.service.CuentaService;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuCliente {
 
-    public static void menuClientes(Scanner scanner,
-                                    ClienteService clienteService,
-                                    CuentaService cuentaService) {
+    private Scanner scanner;
+    private ClienteService clienteService;
 
+    public MenuCliente(Scanner scanner, ClienteService clienteService) {
+        this.scanner = scanner;
+        this.clienteService = clienteService;
+    }
+
+    public void mostrar() {
         int opcion;
 
         do {
@@ -23,27 +27,21 @@ public class MenuCliente {
             System.out.println("4. Volver");
             System.out.print("Seleccione una opción: ");
 
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
-            System.out.println("-------------------------");
+            opcion = Integer.parseInt(scanner.nextLine());
 
             switch (opcion) {
                 case 1:
-                    crearCliente(scanner, clienteService);
+                    crearCliente();
                     break;
-
                 case 2:
-                    buscarCliente(scanner, clienteService);
+                    buscarCliente();
                     break;
-
                 case 3:
-                    listarClientes(clienteService);
+                    listarClientes();
                     break;
-
                 case 4:
-                    System.out.println("Volviendo al menú principal...");
+                    System.out.println("Volviendo...");
                     break;
-
                 default:
                     System.out.println("Opción inválida.");
             }
@@ -51,7 +49,7 @@ public class MenuCliente {
         } while (opcion != 4);
     }
 
-    private static void crearCliente(Scanner scanner, ClienteService clienteService) {
+    private void crearCliente() {
         try {
             System.out.print("Nombre: ");
             String nombre = scanner.nextLine();
@@ -70,7 +68,7 @@ public class MenuCliente {
 
             Cliente cliente = clienteService.crearCliente(nombre, apellidos, dni, email, telefono);
 
-            System.out.println("Cliente creado correctamente:");
+            System.out.println("\nCliente creado correctamente:");
             mostrarCliente(cliente);
 
         } catch (Exception e) {
@@ -78,20 +76,19 @@ public class MenuCliente {
         }
     }
 
-    private static void buscarCliente(Scanner scanner, ClienteService clienteService) {
+    private void buscarCliente() {
         System.out.println("1. Buscar por ID");
         System.out.println("2. Buscar por DNI");
         System.out.print("Seleccione una opción: ");
 
-        int opcionBusqueda = scanner.nextInt();
-        scanner.nextLine();
+        int opcionBusqueda = Integer.parseInt(scanner.nextLine());
 
         try {
             Cliente cliente = null;
+
             if (opcionBusqueda == 1) {
                 System.out.print("Introduzca el ID: ");
-                long id = scanner.nextLong();
-                scanner.nextLine();
+                long id = Long.parseLong(scanner.nextLine());
                 cliente = clienteService.encontrarPorId(id);
             } else if (opcionBusqueda == 2) {
                 System.out.print("Introduzca el DNI: ");
@@ -103,16 +100,18 @@ public class MenuCliente {
             }
 
             if (cliente != null) {
+                System.out.println();
                 mostrarCliente(cliente);
             } else {
                 System.out.println("Cliente no encontrado.");
             }
+
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
 
-    private static void listarClientes(ClienteService clienteService) {
+    private void listarClientes() {
         List<Cliente> clientes = clienteService.listarClientes();
 
         if (clientes.isEmpty()) {
@@ -120,6 +119,7 @@ public class MenuCliente {
             return;
         }
 
+        System.out.println();
         System.out.printf("%-4s | %-18s | %-10s | %-25s | %-12s%n",
                 "ID", "Nombre", "DNI", "Email", "Teléfono");
         System.out.println("-----|--------------------|------------|---------------------------|-------------");
@@ -129,7 +129,7 @@ public class MenuCliente {
         }
     }
 
-    private static void mostrarCliente(Cliente c) {
+    private void mostrarCliente(Cliente c) {
         String nombreCompleto = c.getNombre() + " " + c.getApellidos();
         nombreCompleto = nombreCompleto.length() > 18 ? nombreCompleto.substring(0, 18) : nombreCompleto;
         String dni = c.getDni().length() > 10 ? c.getDni().substring(0, 10) : c.getDni();
@@ -137,10 +137,6 @@ public class MenuCliente {
         String telefono = c.getTelefono().length() > 12 ? c.getTelefono().substring(0, 12) : c.getTelefono();
 
         System.out.printf("%-4d | %-18s | %-10s | %-25s | %-12s%n",
-                c.getId(),
-                nombreCompleto,
-                dni,
-                email,
-                telefono);
+                c.getId(), nombreCompleto, dni, email, telefono);
     }
 }
