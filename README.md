@@ -1,4 +1,5 @@
-# NovaBank
+# **NovaBank**        ·Tu banco, el banco de todos·
+
 ---
 ## Descripción
 Para el desarrollo del banco NovaBank perteneciente a la actividad de la empresa NttData, en el ámbito de formación se ha requerido la creación de una aplicación en Java, en la que se han hecho uso de los principios generales que toda aplicación debe tener:
@@ -230,6 +231,61 @@ Los menús interactivos de cada sección fueron creados de manera independiente,
 Y desde el **Main** llamamos al menú que le corresponda aparecer por pantalla.
 
 ---
+
+# Diseño del Modelo de Datos.
+
+Aunque no hemos tenido que utilizar una base de datos, hemos diseñado el modelo desde el principio, hemos realizado el estudio de las distintas entidades y visto como actúan entre sí, al igual que el tipo de relación que tienen.
+
+Relaciones principales:
+
+- Cliente → Cuenta: un cliente puede tener muchas cuentas (1:N)
+- Cuenta → Movimiento: una cuenta puede tener muchos movimientos (1:N)
+- Movimiento → Cuenta: un movimiento pertenece a una única cuenta
+
+Un ejemplo visual de como se vería nuestro eschema.sql de manera esquemática:
+<details>
+<summary>Desplegar Esquema: </summary>
+
+```text
+CLIENTES
++----------------------+
+| id (PK)              |
+| nombre               |
+| apellidos            |
+| dni (UNIQUE)         |
+| email (UNIQUE)       |
+| telefono (UNIQUE)    |
++----------------------+
+            1
+            |
+            | 
+            N
+CUENTAS
++----------------------+
+| id (PK)              |
+| numero_cuenta        |
+| cliente_id (FK)      |
+| saldo                |
++----------------------+
+            1
+            |
+            |
+            N
+MOVIMIENTOS
++----------------------+
+| id (PK)              |
+| cuenta_id (FK)       |
+| tipo                 |
+| cantidad             |
+| fecha                |
++----------------------+
+
+```
+</details>
+
+
+---
+
 
 ### Uso de Inteligencia Artificial como herramienta
 
