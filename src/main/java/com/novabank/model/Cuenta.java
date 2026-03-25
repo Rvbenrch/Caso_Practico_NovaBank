@@ -1,11 +1,8 @@
 package com.novabank.model;
 
-import com.novabank.exception.ClienteNoPuedeDepositar;
-import com.novabank.exception.ClienteNoPuedeRetirar;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 
 import static com.novabank.model.TipoMovimiento.*;
 
@@ -17,43 +14,72 @@ public class Cuenta {
     private LocalDateTime fechaCreacion;
     private List<Movimiento> movimientos;
 
-
     public Cuenta(Cliente titular, String numeroCuenta) {
         this.titular = titular;
         this.numeroCuenta = numeroCuenta;
         this.fechaCreacion = LocalDateTime.now();
         this.saldo = 0;
         this.movimientos = new ArrayList<>();
-
     }
 
-   public void depositoDinero(double cantidad){
-        if(cantidad<=0){
-            throw new ClienteNoPuedeDepositar("La cantidad de retiro no es correcta");
-        }
-        else{
-            Movimiento mov = new Movimiento(DEPOSITO,cantidad);
-            movimientos.add(mov);
-            this.saldo +=cantidad;
-        }
-   }
 
-   public void retirarDinero(double retiro){
-       if (retiro<=0){
-           throw new ClienteNoPuedeRetirar("El importe a retirar no es válido: " + retiro);
-       }
-        if(this.saldo<retiro){
-            throw new ClienteNoPuedeRetirar(" Saldo insuficiente.\nSaldo disponible: " + this.saldo +
-                    "\nEl importe que quiere retirar es: " + retiro +
-                    "\nIntentalo de nuevo con un importe válido");
+    // OPERACIONES DE NEGOCIO
+
+
+    public void ingresar(double cantidad) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad a ingresar debe ser mayor que 0");
         }
 
-        else{
-            this.saldo -= retiro;
-            Movimiento mov = new Movimiento(RETIRO,retiro);
-            movimientos.add(mov);
+        this.saldo += cantidad;
+        movimientos.add(new Movimiento(DEPOSITO, cantidad));
+    }
+
+    public void retirar(double cantidad) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad a retirar debe ser mayor que 0");
         }
-   }
+
+        if (this.saldo < cantidad) {
+            throw new IllegalArgumentException(
+                    "Saldo insuficiente. Disponible: " + this.saldo
+            );
+        }
+
+        this.saldo -= cantidad;
+        movimientos.add(new Movimiento(RETIRO, cantidad));
+    }
+
+    public void transferirA(Cuenta destino, double cantidad) {
+        if (destino == null) {
+            throw new IllegalArgumentException("La cuenta destino no puede ser null");
+        }
+
+        if (this.equals(destino)) {
+            throw new IllegalArgumentException("No puedes transferir a la misma cuenta");
+        }
+
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("Cantidad inválida");
+        }
+
+        if (this.saldo < cantidad) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
+
+        // Actualizar saldos directamente (SIN llamar a retirar/ingresar)
+        this.saldo -= cantidad;
+        destino.saldo += cantidad;
+
+        // Registrar SOLO movimientos de transferencia
+        this.movimientos.add(new Movimiento(TRANSFERENCIA_SALIENTE, cantidad));
+        destino.movimientos.add(new Movimiento(TRANSFERENCIA_ENTRANTE, cantidad));
+    }
+
+
+    // GETTERS
+
+
     public String getNumeroCuenta() {
         return numeroCuenta;
     }
@@ -65,40 +91,12 @@ public class Cuenta {
     public double getSaldo() {
         return saldo;
     }
+
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
+
     public List<Movimiento> getMovimientos() {
         return movimientos;
     }
-
-
-
-    // Asegurar transacción.
-    public void debitar(double cantidad) {
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("Cantidad inválida");
-        }
-        if (this.saldo < cantidad) {
-            throw new IllegalArgumentException("Saldo insuficiente");
-        }
-        this.saldo -= cantidad;
-    }
-
-    public void acreditar(double cantidad) {
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("Cantidad inválida");
-        }
-        this.saldo += cantidad;
-    }
-
-
-
-   // Realizar movimientos:
-    public void registrarMovimiento(TipoMovimiento tipo, double cantidad) {
-        Movimiento mov = new Movimiento(tipo, cantidad);
-        movimientos.add(mov);
-    }
-
 }
-

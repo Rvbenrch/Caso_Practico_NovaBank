@@ -1,100 +1,203 @@
-# NovaBank Digital Services
+# NovaBank
+## Descripción
+Para el desarrollo del banco NovaBank perteneciente a la actividad de la empresa NttData, en el ámbito de formación se ha requerido la creación de una aplicación en Java, en la que se han hecho uso de los principios generales que toda aplicación debe tener:
 
-## 📌 Descripción
+- **Encapsulamiento**: Cada clase debe controlar su propio estado y exponer solo lo necesario.
+- **Separación de responsabilidades**: Cada clase debe de tener una única responsabilidad.
+- **No duplicar lógica** en distintas clases.
+- **Cohesión** entre métodos de distintas clases.
+- **Acoplamiento bajo**: Evitar que las clases dependan fuertemente de otras.
+- **Uso de interfaces**: Evitando que en futuros proyectos, al realizar modificaciones se tenga que cambiar la lógica existente.
+- **Validación y manejo de errores**: Toda operación, por simple que sea, estará validada con pruebas unitarias.
+<details>
+  <summary>Resumen de la arquitectura</summary>
 
-NovaBank Digital Services es una aplicación de consola desarrollada en Java que simula un sistema básico de gestión bancaria.
+| Capa         | Clases                                                 | Responsabilidad                                                                  |
+|--------------|--------------------------------------------------------|----------------------------------------------------------------------------------|
+| model        | `Cliente`, `Cuenta`, `Movimiento`, `TipoMovimiento`    | Datos y operaciones internas (solo `Cuenta` mueve dinero y registra movimientos) |
+| repository   | `ClienteRepository`, `CuentaRepository`                | Almacenamiento en memoria (usando `Map`) y búsquedas rápidas                     |
+| service      | `ClienteService`, `CuentaService`                      | Lógica de negocio: crea clientes, crea cuentas, orquesta operaciones financieras |
+| menus / main | `Main`, `MenuCliente`, `MenuCuentas`, `MenuOperaciones` | Interfaz de consola, interacción con el usuario                                  |
 
-En este primer módulo el sistema:
+</details>
 
-- Funciona completamente en memoria
-- No utiliza base de datos
-- No implementa autenticación
-- Se ejecuta desde consola
+## Funcionalidad de cada clase
+<details>
+    <summary>Packete Model</summary>
+   El paquete model  tiene como finalidad encapsular las entidades principales del dominio y las operaciones asociadas a las mismas.
 
-El objetivo es centrarse en el modelado del dominio y en la lógica de negocio.
+Dentro de este paquete se definen las reglas que gobiernan el comportamiento de las cuentas bancarias, así como las operaciones fundamentales que pueden realizarse sobre ellas:
 
----
+- Ingreso de fondos.
+- Retirada de fondos.
+- Transferencia entre cuentas.
 
-## 🏗 Arquitectura actual del módulo
+Estas operaciones no solo modifican el estado interno de las entidades, sino que también garantizan la coherencia del sistema aplicando las validaciones necesarias y registrando los movimientos correspondientes.
+<div style="margin-left:20px;">
+<details>
+    <summary>Clase Cuenta</summary>
 
-La funcionalidad implementada sigue una estructura en capas sencilla:
+Contiene las siguientes variables:
+- numeroCuenta.
+- titular 
+- saldo 
+- fechaCreacion 
+- Lista de Movimientos = movimientos
+ 
+Contiene las siguientes funciones:
+- ingresar()
+- retirar()
+- transferirA()
 
-![pictures/img.png](pictures/img.png)
+Contiene los getters:
+- getNumeroCuenta()
+- getTitular()
+- getSaldo()
+- getFechaCreacion()
+- getMovimientos()
+
+En esta clase y después de cada método, dependiendo del método que realicemos, ya sea **ingresar, retirar o transferir**, llamamos a la clase movimientos y realizamos el registro del movimiento.
+
+</details>
 
 
-### 🔹 1. Capa de Modelo (`model`)
+<details>
+    <summary> Clase Cliente</summary>
+Esta clase nos permite registrar a los clientes, para ello hemos necesitado guardar las siguientes variables:
 
-Contiene las clases que representan las entidades del dominio.
+- ID del cliente.
+- Nombre
+- Apellidos
+- Email
+- Teléfono
 
-**Cliente**
+De estas variables hemos tenido en cuenta que el DNI contenga al menos "@" y "."
+El ID del cliente es autogenerado automáticamente.
+La clase cliente también cuenta con los gettes y Setters de algunos de los atributos anteriormente nombrados.
 
-Representa un cliente del banco con los siguientes atributos:
 
-- id (generado automáticamente)
-- nombre
-- apellidos
-- dni (único)
-- email (único)
-- telefono (único)
+</details>
 
-Esta clase solo contiene estado y comportamiento básico (getters, setters, etc.).
 
----
+<details><summary>Clase Movimiento</summary>
 
-### 🔹 2. Capa de Repositorio (`repository`)
+En la clase movimiento hemos definido 3 variables, teniendo en cuenta que hay otra clase Enum que tiene que inicializarse antes.
+Las variables que hemos creado para esta clase son:
 
-Gestiona el almacenamiento en memoria.
+- El tipo de movimiento: tipo (pertenenciente a TipoMovimiento)
+- importe
+- fecha (con LocalDateTime).
 
-**ClienteRepository**
+El constructor cuenta con las variables tipo e importe. Aunque dentro usamos también el LocalDateTime.now().
 
-- Almacena los clientes en una `ArrayList`
-- Permite guardar clientes
-- Permite buscar clientes por DNI o ID
-- Simula el acceso a datos (en este módulo sin base de datos)
+Hemos creado los getters de las variables TipoMovimiento, Importe y getFecha().
 
-Su responsabilidad es únicamente la gestión de datos en memoria.
 
----
+</div>
+</details>
+</details>
 
-### 🔹 3. Capa de Servicio (`service`)
 
-Contiene la lógica de negocio.
 
-**ClienteService**
 
-- Valida que el DNI no esté duplicado
-- Valida reglas básicas antes de crear un cliente
-- Utiliza `ClienteRepository` para guardar y recuperar datos
 
-Aquí es donde se centralizan las reglas del negocio.
 
----
 
-## 🔄 Relación entre las clases
 
-El flujo actual funciona así:
 
-1. El sistema solicita datos al usuario.
-2. `ClienteService` recibe esos datos.
-3. `ClienteService` valida reglas de negocio.
-4. Si todo es correcto, delega en `ClienteRepository`.
-5. `ClienteRepository` almacena el cliente en memoria.
+<details><summary>Packete Repository</summary>
 
-ClienteService → usa → ClienteRepository → almacena → Cliente
+Dentro de este packete vamos a encontrar dos clases:
 
-Esta separación permite:
+ - ClienteRepository
+ - CuentaRepository
 
-- Mantener responsabilidades claras
-- Facilitar pruebas unitarias
-- Preparar el proyecto para futuras mejoras (base de datos en Módulo 2)
+Estas clases han sido usadas como almacenamiento, es el lugar dónde se ha implementado el uso de los Map, con la finalidad de poder realizar búsquedas rápidas.
 
----
+<div style="margin-left:20px;">
+<details><summary>Clase Cliente Repository</summary>
 
-## ✅ Funcionalidades implementadas
+En esta clase hemos creado las siguientes variables, todas ellas haciendo uso de Map, new HashMap, la finalidad de usar esta función es poder acceder a los datos de manera más rápida, creando "etiquetas" para el conjunto de datos dado.
 
-### Gestión de clientes
+- clientesPorDni, se guarda el dni junto con el cliente completo.
+- clientePoremail, se guarda el dni junto con el cliente.
+- clientesPorTelefono, se guarda el teléfono junto con el cliente al que le pertenece.
+- clientesPorID, se guarda el id del cliente junto al cliente.
 
-- Creación de clientes
-- Validación de DNI único
-- Almacenamiento en memoria mediante ArrayList
-- Generación automática de ID
+Todos estos HashMap nos permiten llevar a cabo las siguientes funciones definidas en la clase:
+
+- buscarPorDni(dni): simplemente clientesPorDni(dni) y tendríamos la variable correspondiente.
+- buscarPorEmail(email)
+- buscarPorTelefono(telefono)
+- buscarPorID(id)
+- buscarTodos(), para devolver una lista con todos los clientes que tenemos.
+
+</details>
+
+<details><summary>Clase CuentaRepository</summary>
+Esta clase actúa igual que la clase ClienteRepository aunque es algo más sencilla.
+Únicamente tenemos un HasMap de la variable cuentas, dónde vamos a ir añadiendo aquellas cuentas que se van creando.
+Contamos con las siguientes funciones:
+
+- public void guardar(Cuenta cuenta), añadimos al HashMap la cuenta recién creada.
+- buscarPorNumeroCuenta(String numeroCuenta)
+
+A la hora de crear el Listar Cuentas, he creado un ArrayList para devolver los valores del HashMap cuentas.
+También tenemos un buscarPorClienteID(id), en el que vamos recorriendo cada valor de cuentas, cuentas.values() y lo comparamos las variables del ID del titular con el id, mediante el uso de un equals.
+
+</details>
+
+</div>
+</details>
+
+<details><summary>Packete Service</summary>
+En este packete hacemos la lógica del negocio, creamos clientes, creamos cuentas o bien llamamos a las funciones para poder realizar las operaciones financieras que ya se encontraban definidas.
+En este packete vamos a encontrar las siguientes clases:
+
+- ClienteService
+- CuentaService
+
+<div style="margin-left:20px;">
+<details><summary>Clase ClienteService</summary>
+En esta clase se elaboran tanto las validaciones de los requisitos como la lógica de la creación del cliente.
+Como variables hemos traído el paquete de Cliente repository, con el objetivo de poder acceder a todas las funciones que hemos creado anteriormente y usarlas para validar que las operaciones financieras se estén realizando de manera correcta, sin tener saldos en negativo por ejemplo.
+Encontramos la función Cliente crearCliente() y las condiciones que se verifican son:
+
+- if(buscarPorDni no es null), es porque ya existe alguien con ese dni, no puede ser cliente nuevo y por tanto lanzamos excepción.
+- if(buscarPorEmail no es null), ya existe un cliente con ese email.
+- if(buscarPortelefono no es null), teléfono ya registrado.
+- if(emails no contiene "@" o "."), el email está mal diseñado y tiene que seguir una estructura ejemplo@dominio.com
+
+Si de estas condiciones, ninguna ha hecho saltar el error entonces se crea el nuevo cliente.
+Además, en esta clase definimos otras funciones para llevarlas a cabo desde Cliente service:
+
+- encontrarPorDni(dni){ return repository.buscarPorDni(dni)
+- encontrarPorId(long id){
+- return repository.buscarPorId(id)
+- listarClientes() {return repository.buscarTodos();
+
+
+</details>
+
+<details><summary>Clase CuentaService</summary>
+Para el desarrollo de esta clase hemos necesitado, 
+
+- CuentaRepository, dónde quedaban definidas las cuentas que han sido creadas, y eran guardadas en el hashMap()
+- ClienteService, dónde ya se reciben los clientes que han sido creados y validados, con sus respectivos atributos.
+
+Las funciones que se han realizado en la clase **CuentaService** son:
+
+- crearCuenta(pidiendo el idCliente), para ello se verifica que el cliente no sea null.
+- buscarPorNumeroCuenta(numeroCuenta), verificamos que exista la cuenta, y como es un HashMap, le devolvemos el valor.
+- listarCuentasPorClientes(clienteID), buscamos al cliente por su ID y devolvemos la cuentas que tenga.
+- Operaciones
+  - ingresar()
+  - retirar()
+  - transferirA()
+
+</div>
+</details>
+</details>
+
+
+

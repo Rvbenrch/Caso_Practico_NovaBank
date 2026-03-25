@@ -16,9 +16,7 @@ public class MenuOperaciones {
     }
 
     public void mostrar() {
-
         int opcion;
-
         do {
             System.out.println("\n--- OPERACIONES FINANCIERAS ---");
             System.out.println("1. Ingresar dinero");
@@ -27,8 +25,7 @@ public class MenuOperaciones {
             System.out.println("4. Volver");
             System.out.print("Seleccione una opción: ");
 
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+            opcion = Integer.parseInt(scanner.nextLine());
 
             switch (opcion) {
                 case 1:
@@ -51,60 +48,45 @@ public class MenuOperaciones {
     }
 
     private void ingresar() {
-
         try {
-
             System.out.print("Número de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             System.out.print("Cantidad a depositar: ");
-            double cantidad = scanner.nextDouble();
-            scanner.nextLine(); // limpiar buffer
+            double cantidad = Double.parseDouble(scanner.nextLine());
 
             Cuenta cuenta = cuentaService.ingresar(numeroCuenta, cantidad);
-
-            System.out.println("\nDepósito realizado correctamente.");
+            System.out.println("Depósito realizado correctamente:");
             System.out.println("Cuenta: " + cuenta.getNumeroCuenta());
             System.out.println("Importe: +" + String.format("%.2f", cantidad) + " €");
             System.out.println("Nuevo saldo: " + String.format("%.2f", cuenta.getSaldo()) + " €");
 
         } catch (Exception e) {
-
-            System.out.println("\nERROR: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 
     private void retirar() {
-
         try {
-
             System.out.print("Número de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             System.out.print("Cantidad a retirar: ");
-            double cantidad = scanner.nextDouble();
-            scanner.nextLine(); // limpiar buffer
+            double cantidad = Double.parseDouble(scanner.nextLine());
 
-            cuentaService.retirar(numeroCuenta, cantidad);
-
-            Cuenta cuentaActualizada = cuentaService.buscarPorNumeroCuenta(numeroCuenta);
-
-            System.out.println("\nRetirada realizada correctamente.");
-            System.out.println("Cuenta: " + cuentaActualizada.getNumeroCuenta());
+            Cuenta cuenta = cuentaService.retirar(numeroCuenta, cantidad);
+            System.out.println("Retirada realizada correctamente:");
+            System.out.println("Cuenta: " + cuenta.getNumeroCuenta());
             System.out.println("Importe: -" + String.format("%.2f", cantidad) + " €");
-            System.out.println("Nuevo saldo: " + String.format("%.2f", cuentaActualizada.getSaldo()) + " €");
+            System.out.println("Nuevo saldo: " + String.format("%.2f", cuenta.getSaldo()) + " €");
 
         } catch (Exception e) {
-
-            System.out.println("\nERROR: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 
-
     private void transferir() {
-
         try {
-
             System.out.print("Número de cuenta origen: ");
             String numeroOrigen = scanner.nextLine();
 
@@ -112,27 +94,16 @@ public class MenuOperaciones {
             String numeroDestino = scanner.nextLine();
 
             System.out.print("Cantidad a transferir: ");
-            double cantidad = scanner.nextDouble();
-            scanner.nextLine(); // limpiar buffer
+            double cantidad = Double.parseDouble(scanner.nextLine());
 
             cuentaService.transferir(numeroOrigen, numeroDestino, cantidad);
 
-            System.out.println("\nTransferencia realizada correctamente.");
-            System.out.println("Cuenta origen:  " + numeroOrigen +
-                    "  →  -" + String.format("%.2f", cantidad) + " €");
-            System.out.println("Cuenta destino: " + numeroDestino +
-                    "  →  +" + String.format("%.2f", cantidad) + " €");
+            System.out.println("Transferencia realizada correctamente:");
+            System.out.println("Cuenta origen: " + numeroOrigen + " → -" + String.format("%.2f", cantidad) + " €");
+            System.out.println("Cuenta destino: " + numeroDestino + " → +" + String.format("%.2f", cantidad) + " €");
 
         } catch (Exception e) {
-
-            System.out.println("\nERROR: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 }
-
-
-
-
-
-
-
