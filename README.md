@@ -232,7 +232,7 @@ Y desde el **Main** llamamos al menú que le corresponda aparecer por pantalla.
 
 ---
 
-# Diseño del Modelo de Datos.
+## Diseño del Modelo de Datos.
 
 Aunque no hemos tenido que utilizar una base de datos, hemos diseñado el modelo desde el principio, hemos realizado el estudio de las distintas entidades y visto como actúan entre sí, al igual que el tipo de relación que tienen.
 
@@ -285,7 +285,93 @@ MOVIMIENTOS
 
 
 ---
+## Creación de los Test
+<details><summary>Tests unitarios — ClienteServiceTest</summary>
 
+La clase `ClienteServiceTest` valida el comportamiento del servicio `ClienteService`, asegurando el correcto funcionamiento de la lógica de negocio asociada a la creación de clientes y la aplicación de restricciones de unicidad.
+
+Se utiliza JUnit 5 y se inicializa un nuevo `ClienteService` antes de cada prueba mediante el método `@BeforeEach`, garantizando un entorno aislado para cada test.
+
+#### Casos verificados
+
+- **crearCliente_valido_debeCrear**  
+  Verifica que un cliente con datos válidos se crea correctamente y que los atributos básicos (como el nombre) se asignan de forma adecuada.
+
+- **crearCliente_dniDuplicado_debeLanzarExcepcion**  
+  Comprueba que no se permite registrar dos clientes con el mismo DNI, lanzando `ClienteDuplicadoException`.
+
+- **crearCliente_emailInvalido_debeLanzarExcepcion**  
+  Valida que el sistema detecta un formato de email incorrecto y lanza una `IllegalArgumentException`.
+
+- **emailRepetido**  
+  Verifica que no se permite registrar dos clientes con el mismo correo electrónico, lanzando `ClienteDuplicadoException`.
+
+- **telefonoDuplicado**  
+  Comprueba que no se permite registrar dos clientes con el mismo número de teléfono, lanzando `ClienteDuplicadoException`.
+
+Estos tests garantizan que el servicio aplica correctamente las reglas de validación y las restricciones de unicidad definidas en el dominio.
+
+</details>
+
+
+
+
+
+<details><summary>Tests unitarios — CuentaServiceTest</summary>
+
+La clase `CuentaServiceTest` valida el comportamiento del servicio `CuentaService`, asegurando la correcta gestión de cuentas bancarias y operaciones asociadas como ingresos, retiradas y transferencias.
+
+Cada prueba inicializa repositorios en memoria y servicios independientes mediante `@BeforeEach`, garantizando aislamiento entre casos de prueba.
+
+#### Casos verificados
+
+- **crearCuenta_clienteExistente_debeCrearCuenta**  
+  Verifica que una cuenta puede crearse correctamente cuando el cliente existe y que queda correctamente asociada a su titular.
+
+- **ingresar_valido_debeActualizarSaldo**  
+  Comprueba que un ingreso válido incrementa correctamente el saldo de la cuenta.
+
+- **retirar_saldoSuficiente_debeActualizarSaldo**  
+  Valida que una retirada con saldo suficiente descuenta correctamente el importe indicado.
+
+- **retirar_saldoInsuficiente_debeLanzarExcepcion**  
+  Garantiza que no se permite realizar retiradas sin saldo suficiente, lanzando `IllegalArgumentException`.
+
+- **transferir_valido_debeActualizarSaldos**  
+  Verifica que una transferencia válida actualiza correctamente los saldos de la cuenta origen y destino.
+
+- **transferir_aMismaCuenta_debeLanzarExcepcion**  
+  Comprueba que el sistema impide transferencias hacia la misma cuenta, lanzando `IllegalArgumentException`.
+
+- **buscarCuenta_inexistente_debeLanzarExcepcion**  
+  Valida que la búsqueda de una cuenta inexistente lanza la excepción `CuentaNoEncontrada`.
+
+Estos tests garantizan la integridad de las operaciones financieras y el cumplimiento de las reglas de negocio asociadas a la gestión de cuentas.
+</details>
+
+
+<details><summary>Tests unitarios — ConsultaServiceTest</summary>
+
+La clase `ConsultaServiceTest` valida el comportamiento del servicio `ConsultaService`, encargado de proporcionar funcionalidades de consulta sobre cuentas y movimientos.
+
+Cada test configura un entorno completo con cliente, cuenta y operaciones previas, permitiendo verificar el comportamiento real de las consultas.
+
+#### Casos verificados
+
+- **consultarSaldo_debeRetornarSaldo**  
+  Verifica que el servicio devuelve correctamente el saldo actual de una cuenta tras realizar operaciones.
+
+- **historialMovimientos_debeRetornarMovimientosOrdenados**  
+  Comprueba que el historial de movimientos devuelve el número correcto de registros generados tras varias operaciones.
+
+- **movimientosPorRangoFechas_debeFiltrarCorrectamente**  
+  Valida que el sistema filtra correctamente los movimientos en función de un rango de fechas determinado.
+
+Estos tests aseguran que las funcionalidades de consulta reflejan correctamente el estado actual de las cuentas y sus movimientos, manteniendo coherencia con la lógica del dominio.
+</details>
+
+
+--- 
 
 ### Uso de Inteligencia Artificial como herramienta
 
