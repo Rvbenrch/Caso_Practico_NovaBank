@@ -35,7 +35,7 @@ public class MenuConsultas {
             System.out.println("2. Historial de movimientos");
             System.out.println("3. Movimientos por rango de fechas");
             System.out.println("4. Volver");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opcion: ");
 
             opcion = Integer.parseInt(scanner.nextLine());
 
@@ -53,7 +53,7 @@ public class MenuConsultas {
                     System.out.println("Volviendo...");
                     break;
                 default:
-                    System.out.println("Opción inválida.");
+                    System.out.println("Opción invalida.");
             }
 
         } while (opcion != 4);
@@ -62,7 +62,7 @@ public class MenuConsultas {
 
     private void consultarSaldo() {
         try {
-            System.out.print("Introduzca número de cuenta: ");
+            System.out.print("Introduzca numero de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             double saldo = consultaService.consultarSaldo(numeroCuenta);
@@ -77,7 +77,7 @@ public class MenuConsultas {
 
     private void historialMovimientos() {
         try {
-            System.out.print("Introduzca número de cuenta: ");
+            System.out.print("Introduzca numero de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             List<Movimiento> movimientos =
@@ -94,7 +94,7 @@ public class MenuConsultas {
 
     private void movimientosPorRango() {
         try {
-            System.out.print("Número de cuenta: ");
+            System.out.print("Numero de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             System.out.print("Fecha inicio (yyyy-MM-dd): ");
