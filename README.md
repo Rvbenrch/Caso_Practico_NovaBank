@@ -140,30 +140,10 @@ https://github.com/Rvbenrch/Caso_Practico_NovaBank
 
 ---
 
-## IMÁGENES (AÑADIR DESPUÉS)
+## IMÁGENES FLUJO TRABAJO
 
-Colocar imágenes en la carpeta:
 
-    /pictures
+![img.png](pictures/img.png)
 
-Añadir en estas secciones:
-
-1. Debajo de "Descripción"
-   (captura del menú principal)
-
-2. Debajo de "Funcionalidades"
-   (ejemplo de uso o navegación)
-
-3. Debajo de "Testing"
-   (tests ejecutándose)
-
-4. Debajo de "Codespaces"
-   (entorno en navegador)
-
-Formato a usar:
-
-<p align="center">
-  <img src="pictures/nombre-imagen.png" width="600">
-</p>
-
+![flujotrabajo1.png](pictures/flujotrabajo1.png)
 ---
