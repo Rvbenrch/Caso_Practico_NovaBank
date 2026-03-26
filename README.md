@@ -1,16 +1,68 @@
 # **NovaBank**        ·Tu banco, el banco de todos·
 
 ---
-## Descripción
-Para el desarrollo del banco NovaBank perteneciente a la actividad de la empresa NttData, en el ámbito de formación se ha requerido la creación de una aplicación en Java, en la que se han hecho uso de los principios generales que toda aplicación debe tener:
 
-- **Encapsulamiento**: Cada clase debe controlar su propio estado y exponer solo lo necesario.
-- **Separación de responsabilidades**: Cada clase debe de tener una única responsabilidad.
-- **No duplicar lógica** en distintas clases.
-- **Cohesión** entre métodos de distintas clases.
-- **Acoplamiento bajo**: Evitar que las clases dependan fuertemente de otras.
-- **Uso de interfaces**: Evitando que en futuros proyectos, al realizar modificaciones se tenga que cambiar la lógica existente.
-- **Validación y manejo de errores**: Toda operación, por simple que sea, estará validada con pruebas unitarias.
+![bankpicture.jpg](pictures/bankpicture.jpg)
+
+---
+# Índice
+
+1. [Descripción del Proyecto](#descripción-del-proyecto)
+2. [Arquitectura del Sistema](#arquitectura-del-sistema)
+3. [Modelo de Datos](#modelo-de-datos)
+4. [Diagrama Entidad-Relación](#diagrama-entidad-relación)
+5. [Estructura del Proyecto](#estructura-del-proyecto)
+6. [Diseño de Servicios y Responsabilidades](#diseño-de-servicios-y-responsabilidades)
+7. [Gestión de Excepciones](#gestión-de-excepciones)
+8. [Tests y Estrategia de Validación](#tests-y-estrategia-de-validación)
+9. [Tecnologías Utilizadas](#tecnologías-utilizadas)
+10. [Requisitos del Sistema](#requisitos-del-sistema)
+11. [Instalación y Compilación](#instalación-y-compilación)
+12. [Ejecución de la Aplicación](#ejecución-de-la-aplicación)
+13. [Ejecución de Tests](#ejecución-de-tests)
+14. [Uso de Inteligencia Artificial](#uso-de-inteligencia-artificial)
+15. [Flujo de Trabajo con Git](#flujo-de-trabajo-con-git)
+16. [Repositorio en GitHub](#repositorio-en-github)
+
+--- 
+
+## Descripción del Proyecto
+
+**NovaBank** es una aplicación desarrollada en Java como parte de una actividad formativa en el entorno de NTT Data. El objetivo del proyecto es implementar un sistema bancario simplificado que permita gestionar clientes, cuentas y operaciones financieras, aplicando principios sólidos de diseño y buenas prácticas de desarrollo.
+
+En este módulo se ha construido una aplicación de consola estructurada por capas, en la que se implementan las siguientes funcionalidades principales:
+
+- Registro y gestión de clientes.
+- Creación y administración de cuentas bancarias.
+- Operaciones financieras: ingreso, retirada y transferencia.
+- Consulta de saldo e historial de movimientos.
+- Validación de datos y control de errores mediante excepciones personalizadas.
+- Verificación del comportamiento mediante pruebas unitarias con JUnit 5.
+
+El diseño del sistema se ha basado en los siguientes principios fundamentales:
+
+- **Encapsulamiento**: Cada clase gestiona su propio estado y expone únicamente lo necesario.
+- **Separación de responsabilidades**: Cada componente tiene una única responsabilidad claramente definida.
+- **Alta cohesión y bajo acoplamiento**: Se minimizan dependencias innecesarias entre clases.
+- **No duplicación de lógica**: Las reglas de negocio se centralizan en la capa de servicios.
+- **Uso de interfaces y abstracción lógica**: Facilitando la mantenibilidad y futura evolución del sistema.
+- **Validación y manejo de errores**: Todas las operaciones están protegidas mediante validaciones y pruebas unitarias.
+
+El almacenamiento de datos se realiza en memoria mediante estructuras `Map`, simulando el comportamiento de persistencia y permitiendo búsquedas eficientes.
+
+
+## Arquitectura del Sistema
+
+La aplicación sigue una arquitectura por capas, separando claramente las responsabilidades del dominio, la lógica de negocio, el acceso a datos y la interacción con el usuario.
+
+El objetivo de esta estructura es garantizar:
+
+- Mantenibilidad del sistema.
+- Bajo acoplamiento entre componentes.
+- Alta cohesión dentro de cada módulo.
+- Facilidad de extensión futura.
+
+
 <details>
   <summary>Resumen de la arquitectura</summary>
 
@@ -23,228 +75,73 @@ Para el desarrollo del banco NovaBank perteneciente a la actividad de la empresa
 
 </details>
 
----
+### Capa `model`
 
-## Funcionalidad de cada clase
+Contiene las entidades del dominio y las reglas internas asociadas a su comportamiento.  
+La clase `Cuenta` es la única responsable de modificar el saldo y registrar movimientos, garantizando la coherencia del estado financiero.
 
----
-<details>
-    <summary>Packete Model</summary>
-   El paquete model  tiene como finalidad encapsular las entidades principales del dominio y las operaciones asociadas a las mismas.
+### Capa `repository`
 
-Dentro de este paquete se definen las reglas que gobiernan el comportamiento de las cuentas bancarias, así como las operaciones fundamentales que pueden realizarse sobre ellas:
+Implementa almacenamiento en memoria mediante estructuras `HashMap`, permitiendo búsquedas rápidas por claves como DNI, ID o número de cuenta.
 
-- Ingreso de fondos.
-- Retirada de fondos.
-- Transferencia entre cuentas.
+Esta capa abstrae el acceso a datos, facilitando una futura sustitución por persistencia real (por ejemplo, base de datos relacional).
 
-Estas operaciones no solo modifican el estado interno de las entidades, sino que también garantizan la coherencia del sistema aplicando las validaciones necesarias y registrando los movimientos correspondientes.
-<div style="margin-left:20px;">
-<details>
-    <summary>Clase Cuenta</summary>
+### Capa `service`
 
-Contiene las siguientes variables:
-- numeroCuenta.
-- titular 
-- saldo 
-- fechaCreacion 
-- Lista de Movimientos = movimientos
- 
-Contiene las siguientes funciones:
-- ingresar()
-- retirar()
-- transferirA()
+Centraliza la lógica de negocio del sistema:
 
-Contiene los getters:
-- getNumeroCuenta()
-- getTitular()
-- getSaldo()
-- getFechaCreacion()
-- getMovimientos()
+- Validaciones.
+- Control de duplicidades.
+- Gestión de excepciones.
+- Coordinación entre repositorios.
+- Orquestación de operaciones financieras.
 
-En esta clase y después de cada método, dependiendo del método que realicemos, ya sea **ingresar, retirar o transferir**, llamamos a la clase movimientos y realizamos el registro del movimiento.
+Evita que la lógica de negocio se disperse en otras capas.
 
-</details>
+### Capa de presentación (menús)
 
+Gestiona la interacción con el usuario mediante consola.  
+Se limita a recoger datos, mostrar información y delegar las operaciones en la capa de servicios.
 
-<details>
-    <summary> Clase Cliente</summary>
-Esta clase nos permite registrar a los clientes, para ello hemos necesitado guardar las siguientes variables:
-
-- ID del cliente.
-- Nombre
-- Apellidos
-- Email
-- Teléfono
-
-De estas variables hemos tenido en cuenta que el DNI contenga al menos "@" y "."
-El ID del cliente es autogenerado automáticamente.
-La clase cliente también cuenta con los gettes y Setters de algunos de los atributos anteriormente nombrados.
-
-
-</details>
-
-
-<details><summary>Clase Movimiento</summary>
-
-En la clase movimiento hemos definido 3 variables, teniendo en cuenta que hay otra clase Enum que tiene que inicializarse antes.
-Las variables que hemos creado para esta clase son:
-
-- El tipo de movimiento: tipo (pertenenciente a TipoMovimiento)
-- importe
-- fecha (con LocalDateTime).
-
-El constructor cuenta con las variables tipo e importe. Aunque dentro usamos también el LocalDateTime.now().
-
-Hemos creado los getters de las variables TipoMovimiento, Importe y getFecha().
-
-
-</div>
-</details>
-</details>
-
-
-
-
-
-
-
-
-
-<details><summary>Packete Repository</summary>
-
-Dentro de este packete vamos a encontrar dos clases:
-
- - ClienteRepository
- - CuentaRepository
-
-Estas clases han sido usadas como almacenamiento, es el lugar dónde se ha implementado el uso de los Map, con la finalidad de poder realizar búsquedas rápidas.
-
-<div style="margin-left:20px;">
-<details><summary>Clase Cliente Repository</summary>
-
-En esta clase hemos creado las siguientes variables, todas ellas haciendo uso de Map, new HashMap, la finalidad de usar esta función es poder acceder a los datos de manera más rápida, creando "etiquetas" para el conjunto de datos dado.
-
-- clientesPorDni, se guarda el dni junto con el cliente completo.
-- clientePoremail, se guarda el dni junto con el cliente.
-- clientesPorTelefono, se guarda el teléfono junto con el cliente al que le pertenece.
-- clientesPorID, se guarda el id del cliente junto al cliente.
-
-Todos estos HashMap nos permiten llevar a cabo las siguientes funciones definidas en la clase:
-
-- buscarPorDni(dni): simplemente clientesPorDni(dni) y tendríamos la variable correspondiente.
-- buscarPorEmail(email)
-- buscarPorTelefono(telefono)
-- buscarPorID(id)
-- buscarTodos(), para devolver una lista con todos los clientes que tenemos.
-
-</details>
-
-<details><summary>Clase CuentaRepository</summary>
-Esta clase actúa igual que la clase ClienteRepository aunque es algo más sencilla.
-Únicamente tenemos un HasMap de la variable cuentas, dónde vamos a ir añadiendo aquellas cuentas que se van creando.
-Contamos con las siguientes funciones:
-
-- public void guardar(Cuenta cuenta), añadimos al HashMap la cuenta recién creada.
-- buscarPorNumeroCuenta(String numeroCuenta)
-
-A la hora de crear el Listar Cuentas, he creado un ArrayList para devolver los valores del HashMap cuentas.
-También tenemos un buscarPorClienteID(id), en el que vamos recorriendo cada valor de cuentas, cuentas.values() y lo comparamos las variables del ID del titular con el id, mediante el uso de un equals.
-
-</details>
-
-</div>
-</details>
-
-<details><summary>Packete Service</summary>
-En este packete hacemos la lógica del negocio, creamos clientes, creamos cuentas o bien llamamos a las funciones para poder realizar las operaciones financieras que ya se encontraban definidas.
-En este packete vamos a encontrar las siguientes clases:
-
-- ClienteService
-- CuentaService
-
-<div style="margin-left:20px;">
-<details><summary>Clase ClienteService</summary>
-En esta clase se elaboran tanto las validaciones de los requisitos como la lógica de la creación del cliente.
-Como variables hemos traído el paquete de Cliente repository, con el objetivo de poder acceder a todas las funciones que hemos creado anteriormente y usarlas para validar que las operaciones financieras se estén realizando de manera correcta, sin tener saldos en negativo por ejemplo.
-Encontramos la función Cliente crearCliente() y las condiciones que se verifican son:
-
-- if(buscarPorDni no es null), es porque ya existe alguien con ese dni, no puede ser cliente nuevo y por tanto lanzamos excepción.
-- if(buscarPorEmail no es null), ya existe un cliente con ese email.
-- if(buscarPortelefono no es null), teléfono ya registrado.
-- if(emails no contiene "@" o "."), el email está mal diseñado y tiene que seguir una estructura ejemplo@dominio.com
-
-Si de estas condiciones, ninguna ha hecho saltar el error entonces se crea el nuevo cliente.
-Además, en esta clase definimos otras funciones para llevarlas a cabo desde Cliente service:
-
-- encontrarPorDni(dni){ return repository.buscarPorDni(dni)
-- encontrarPorId(long id){
-- return repository.buscarPorId(id)
-- listarClientes() {return repository.buscarTodos();
-
-
-</details>
-
-<details><summary>Clase CuentaService</summary>
-Para el desarrollo de esta clase hemos necesitado, 
-
-- CuentaRepository, dónde quedaban definidas las cuentas que han sido creadas, y eran guardadas en el hashMap()
-- ClienteService, dónde ya se reciben los clientes que han sido creados y validados, con sus respectivos atributos.
-
-Las funciones que se han realizado en la clase **CuentaService** son:
-
-- crearCuenta(pidiendo el idCliente), para ello se verifica que el cliente no sea null.
-- buscarPorNumeroCuenta(numeroCuenta), verificamos que exista la cuenta, y como es un HashMap, le devolvemos el valor.
-- listarCuentasPorClientes(clienteID), buscamos al cliente por su ID y devolvemos la cuentas que tenga.
-- Operaciones
-  - ingresar()
-  - retirar()
-  - transferirA()
-
-
-</details>
-<details><summary>Clase Consulta</summary>
-Esta clase tiene como objetivo poder consultar la información que se queda registrada en clase Cuentas para poder acceder más tarde desde el menú.
-
-Necesitamos la variable que proviene desde **CuentaService** para poder acceder a la información que tenemos de cada cuenta, las funciones que nos permite esta clase realizar son las siguientes:
-
-- consultarSaldo(numeroCuenta).
-- obtenerHistorial(numeroCuenta), se ven todos los movimientos de esa cuenta registrados en una lista.
-- obtenerMovimientosPorRango(numeroCuenta, fecha_inicio, fecha_fin), como teníamos guardada la variable de fecha, podemos ver las actividad de una cuenta entre dos rangos de valores que en este caso es fecha.
-
-
-
-
-</details>
-</div>
-</details>
+No contiene lógica de negocio.
 
 ---
 
-Los menús interactivos de cada sección fueron creados de manera independiente, quedando creados los siguientes:
-
-- MenuCliente
-- MenuConsultas
-- MenuCuentas
-- MenuOperaciones
-
-Y desde el **Main** llamamos al menú que le corresponda aparecer por pantalla.
+Esta arquitectura permite que cada capa evolucione de forma independiente, manteniendo el sistema estructurado y alineado con principios de diseño orientado a objetos.
 
 ---
 
-## Diseño del Modelo de Datos.
+## Modelo de Datos
 
-Aunque no hemos tenido que utilizar una base de datos, hemos diseñado el modelo desde el principio, hemos realizado el estudio de las distintas entidades y visto como actúan entre sí, al igual que el tipo de relación que tienen.
+Aunque la aplicación no utiliza una base de datos real, el sistema ha sido diseñado partiendo de un modelo relacional conceptual. Este diseño previo permite estructurar correctamente las entidades, sus atributos y sus relaciones, asegurando coherencia y escalabilidad futura.
 
-Relaciones principales:
+El almacenamiento actual se realiza en memoria mediante estructuras `Map`, pero el modelo está preparado para una posible migración a una base de datos relacional sin necesidad de rediseñar el dominio.
 
-- Cliente → Cuenta: un cliente puede tener muchas cuentas (1:N)
-- Cuenta → Movimiento: una cuenta puede tener muchos movimientos (1:N)
-- Movimiento → Cuenta: un movimiento pertenece a una única cuenta
+### Entidades principales
 
-Un ejemplo visual de como se vería nuestro eschema.sql de manera esquemática:
+El sistema se compone de tres entidades fundamentales:
+
+- **Cliente**
+- **Cuenta**
+- **Movimiento**
+
+### Relaciones entre entidades
+
+- **Cliente → Cuenta**:  
+  Un cliente puede tener múltiples cuentas (relación 1:N).
+
+- **Cuenta → Movimiento**:  
+  Una cuenta puede registrar múltiples movimientos (relación 1:N).
+
+- **Movimiento → Cuenta**:  
+  Cada movimiento pertenece exclusivamente a una cuenta (relación N:1).
+
+Estas relaciones garantizan trazabilidad completa de las operaciones financieras y coherencia en la gestión del saldo.
+
+---
+
 <details>
-<summary>Desplegar Esquema: </summary>
+<summary>Esquema relacional conceptual</summary>
 
 ```text
 CLIENTES
@@ -258,7 +155,6 @@ CLIENTES
 +----------------------+
             1
             |
-            | 
             N
 CUENTAS
 +----------------------+
@@ -269,7 +165,6 @@ CUENTAS
 +----------------------+
             1
             |
-            |
             N
 MOVIMIENTOS
 +----------------------+
@@ -279,104 +174,166 @@ MOVIMIENTOS
 | cantidad             |
 | fecha                |
 +----------------------+
+```
+
+</details>
+
+---
+
+### Consideraciones de diseño
+
+- Las claves primarias (`PK`) identifican de forma única cada entidad.
+- Las claves foráneas (`FK`) modelan las relaciones entre entidades.
+- Las restricciones `UNIQUE` evitan duplicidad en atributos críticos como DNI, email y teléfono.
+- El diseño permite garantizar integridad referencial incluso en un entorno en memoria.
+
+Este enfoque orientado a modelo facilita la mantenibilidad del sistema y asegura una base sólida para su evolución hacia una arquitectura con persistencia real.
+
+## Estructura del Proyecto
+
+El proyecto está organizado siguiendo una estructura modular por paquetes, alineada con la separación de responsabilidades definida en la arquitectura del sistema.
+
+La disposición de carpetas sigue el estándar de proyectos Maven:
+
+<details><summary>Desplegar árbol con las carpetas:</summary>
+
+```text
+El número de serie del volumen es EA34-D89B
+C:.
+│   .gitignore
+│   pom.xml
+│   README.md
+│
+├───.idea
+│       .gitignore
+│       casopractico.iml
+│       compiler.xml
+│       encodings.xml
+│       jarRepositories.xml
+│       misc.xml
+│       vcs.xml
+│       workspace.xml
+│
+├───pictures
+│       bankpicture.jpg
+│       img.png
+│
+├───src
+│   ├───main
+│   │   └───java
+│   │       ├───com
+│   │       │   └───novabank
+│   │       │       │   Main.java
+│   │       │       │
+│   │       │       ├───exception
+│   │       │       │       ClienteDuplicadoException.java
+│   │       │       │       ClienteNoEncontradoException.java
+│   │       │       │       ClienteNoPuedeDepositar.java
+│   │       │       │       ClienteNoPuedeRetirar.java
+│   │       │       │       ClienteNoTransfiere.java
+│   │       │       │       CuentaNoEncontrada.java
+│   │       │       │
+│   │       │       ├───menus
+│   │       │       │       MenuCliente.java
+│   │       │       │       MenuConsultas.java
+│   │       │       │       MenuCuentas.java
+│   │       │       │       MenuOperaciones.java
+│   │       │       │
+│   │       │       ├───model
+│   │       │       │       Cliente.java
+│   │       │       │       Cuenta.java
+│   │       │       │       Movimiento.java
+│   │       │       │       TipoMovimiento.java
+│   │       │       │
+│   │       │       ├───repository
+│   │       │       │       ClienteRepository.java
+│   │       │       │       CuentaRepository.java
+│   │       │       │
+│   │       │       └───service
+│   │       │               ClienteService.java
+│   │       │               ConsultaService.java
+│   │       │               CuentaService.java
+│   │       │
+│   │       └───main
+│   │           └───java
+│   │               └───com
+│   │                   └───novabank
+│   └───test
+│       └───java
+│               ClienteServiceTest.java
+│               ConsultaServiceTest.java
+│               CuentaServiceTest.java
+│
+└───target
+    │   caso-practico-novabank-1.0-SNAPSHOT.jar
+    │
+    ├───classes
+    │   └───com
+    │       └───novabank
+    │           │   Main.class
+    │           │
+    │           ├───exception
+    │           │       ClienteDuplicadoException.class
+    │           │       ClienteNoEncontradoException.class
+    │           │       ClienteNoPuedeDepositar.class
+    │           │       ClienteNoPuedeRetirar.class
+    │           │       ClienteNoTransfiere.class
+    │           │       CuentaNoEncontrada.class
+    │           │
+    │           ├───menus
+    │           │       MenuCliente.class
+    │           │       MenuConsultas.class
+    │           │       MenuCuentas.class
+    │           │       MenuOperaciones.class
+    │           │
+    │           ├───model
+    │           │       Cliente.class
+    │           │       Cuenta.class
+    │           │       Movimiento.class
+    │           │       TipoMovimiento.class
+    │           │
+    │           ├───repository
+    │           │       ClienteRepository.class
+    │           │       CuentaRepository.class
+    │           │
+    │           └───service
+    │                   ClienteService.class
+    │                   ConsultaService.class
+    │                   CuentaService.class
+    │
+    ├───generated-sources
+    │   └───annotations
+    ├───generated-test-sources
+    │   └───test-annotations
+    ├───maven-archiver
+    │       pom.properties
+    │
+    ├───maven-status
+    │   └───maven-compiler-plugin
+    │       ├───compile
+    │       │   └───default-compile
+    │       │           createdFiles.lst
+    │       │           inputFiles.lst
+    │       │
+    │       └───testCompile
+    │           └───default-testCompile
+    │                   createdFiles.lst
+    │                   inputFiles.lst
+    │
+    ├───surefire-reports
+    │       ClienteServiceTest.txt
+    │       ConsultaServiceTest.txt
+    │       CuentaServiceTest.txt
+    │       TEST-ClienteServiceTest.xml
+    │       TEST-ConsultaServiceTest.xml
+    │       TEST-CuentaServiceTest.xml
+    │
+    └───test-classes
+            ClienteServiceTest.class
+            ConsultaServiceTest.class
+            CuentaServiceTest.class
+
+PS C:\Users\rrodrcha\IdeaProjects\casopractico>
 
 ```
 </details>
-
-
----
-## Creación de los Test
-<details><summary>Tests unitarios — ClienteServiceTest</summary>
-
-La clase `ClienteServiceTest` valida el comportamiento del servicio `ClienteService`, asegurando el correcto funcionamiento de la lógica de negocio asociada a la creación de clientes y la aplicación de restricciones de unicidad.
-
-Se utiliza JUnit 5 y se inicializa un nuevo `ClienteService` antes de cada prueba mediante el método `@BeforeEach`, garantizando un entorno aislado para cada test.
-
-#### Casos verificados
-
-- **crearCliente_valido_debeCrear**  
-  Verifica que un cliente con datos válidos se crea correctamente y que los atributos básicos (como el nombre) se asignan de forma adecuada.
-
-- **crearCliente_dniDuplicado_debeLanzarExcepcion**  
-  Comprueba que no se permite registrar dos clientes con el mismo DNI, lanzando `ClienteDuplicadoException`.
-
-- **crearCliente_emailInvalido_debeLanzarExcepcion**  
-  Valida que el sistema detecta un formato de email incorrecto y lanza una `IllegalArgumentException`.
-
-- **emailRepetido**  
-  Verifica que no se permite registrar dos clientes con el mismo correo electrónico, lanzando `ClienteDuplicadoException`.
-
-- **telefonoDuplicado**  
-  Comprueba que no se permite registrar dos clientes con el mismo número de teléfono, lanzando `ClienteDuplicadoException`.
-
-Estos tests garantizan que el servicio aplica correctamente las reglas de validación y las restricciones de unicidad definidas en el dominio.
-
-</details>
-
-
-
-
-
-<details><summary>Tests unitarios — CuentaServiceTest</summary>
-
-La clase `CuentaServiceTest` valida el comportamiento del servicio `CuentaService`, asegurando la correcta gestión de cuentas bancarias y operaciones asociadas como ingresos, retiradas y transferencias.
-
-Cada prueba inicializa repositorios en memoria y servicios independientes mediante `@BeforeEach`, garantizando aislamiento entre casos de prueba.
-
-#### Casos verificados
-
-- **crearCuenta_clienteExistente_debeCrearCuenta**  
-  Verifica que una cuenta puede crearse correctamente cuando el cliente existe y que queda correctamente asociada a su titular.
-
-- **ingresar_valido_debeActualizarSaldo**  
-  Comprueba que un ingreso válido incrementa correctamente el saldo de la cuenta.
-
-- **retirar_saldoSuficiente_debeActualizarSaldo**  
-  Valida que una retirada con saldo suficiente descuenta correctamente el importe indicado.
-
-- **retirar_saldoInsuficiente_debeLanzarExcepcion**  
-  Garantiza que no se permite realizar retiradas sin saldo suficiente, lanzando `IllegalArgumentException`.
-
-- **transferir_valido_debeActualizarSaldos**  
-  Verifica que una transferencia válida actualiza correctamente los saldos de la cuenta origen y destino.
-
-- **transferir_aMismaCuenta_debeLanzarExcepcion**  
-  Comprueba que el sistema impide transferencias hacia la misma cuenta, lanzando `IllegalArgumentException`.
-
-- **buscarCuenta_inexistente_debeLanzarExcepcion**  
-  Valida que la búsqueda de una cuenta inexistente lanza la excepción `CuentaNoEncontrada`.
-
-Estos tests garantizan la integridad de las operaciones financieras y el cumplimiento de las reglas de negocio asociadas a la gestión de cuentas.
-</details>
-
-
-<details><summary>Tests unitarios — ConsultaServiceTest</summary>
-
-La clase `ConsultaServiceTest` valida el comportamiento del servicio `ConsultaService`, encargado de proporcionar funcionalidades de consulta sobre cuentas y movimientos.
-
-Cada test configura un entorno completo con cliente, cuenta y operaciones previas, permitiendo verificar el comportamiento real de las consultas.
-
-#### Casos verificados
-
-- **consultarSaldo_debeRetornarSaldo**  
-  Verifica que el servicio devuelve correctamente el saldo actual de una cuenta tras realizar operaciones.
-
-- **historialMovimientos_debeRetornarMovimientosOrdenados**  
-  Comprueba que el historial de movimientos devuelve el número correcto de registros generados tras varias operaciones.
-
-- **movimientosPorRangoFechas_debeFiltrarCorrectamente**  
-  Valida que el sistema filtra correctamente los movimientos en función de un rango de fechas determinado.
-
-Estos tests aseguran que las funcionalidades de consulta reflejan correctamente el estado actual de las cuentas y sus movimientos, manteniendo coherencia con la lógica del dominio.
-</details>
-
-
---- 
-
-### Uso de Inteligencia Artificial como herramienta
-
-Durante el desarrollo de esta actividad se ha empleado Inteligencia Artificial como herramienta de apoyo técnico y consultivo. Su utilización ha estado orientada principalmente a contrastar decisiones de diseño, validar enfoques arquitectónicos y asegurar que las soluciones adoptadas estuvieran alineadas con buenas prácticas de desarrollo.
-
-Asimismo, se han realizado consultas puntuales para la revisión de código previamente implementado, con el objetivo de detectar posibles errores de implementación, inconsistencias lógicas o mejoras estructurales. Estas revisiones han tenido un carácter complementario y no sustitutivo del análisis propio.
-
-Todas las decisiones técnicas, modificaciones y validaciones finales del código han sido realizadas y supervisadas por el autor. En consecuencia, asumo la responsabilidad íntegra sobre el diseño, la implementación y cualquier posible error que pudiera existir en el presente proyecto.
