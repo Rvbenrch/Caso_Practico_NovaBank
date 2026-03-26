@@ -25,12 +25,12 @@ public class MenuCuentas {
         int opcion;
 
         do {
-            System.out.println("\n--- GESTIÓN DE CUENTAS ---");
+            System.out.println("\n--- GESTION DE CUENTAS ---");
             System.out.println("1. Crear cuenta");
             System.out.println("2. Listar cuentas de cliente");
-            System.out.println("3. Ver información de cuenta");
+            System.out.println("3. Ver informacion de cuenta");
             System.out.println("4. Volver");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opcion: ");
 
             opcion = Integer.parseInt(scanner.nextLine());
 
@@ -48,7 +48,7 @@ public class MenuCuentas {
                     System.out.println("Volviendo...");
                     break;
                 default:
-                    System.out.println("Opción inválida.");
+                    System.out.println("Opción invalida.");
             }
 
         } while (opcion != 4);
@@ -98,12 +98,12 @@ public class MenuCuentas {
 
     private void verCuenta() {
         try {
-            System.out.print("Introduzca número de cuenta: ");
+            System.out.print("Introduzca numero de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             Cuenta cuenta = cuentaService.buscarPorNumeroCuenta(numeroCuenta);
 
-            System.out.println("\n--- INFORMACIÓN DE CUENTA ---");
+            System.out.println("\n--- INFORMACION DE CUENTA ---");
             mostrarCuentaResumen(cuenta);
 
         } catch (Exception e) {
@@ -114,10 +114,10 @@ public class MenuCuentas {
     private void mostrarCuentaResumen(Cuenta cuenta) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        System.out.println("Número de cuenta: " + cuenta.getNumeroCuenta());
+        System.out.println("Numero de cuenta: " + cuenta.getNumeroCuenta());
         System.out.println("Titular: " + cuenta.getTitular().getNombre() + " " + cuenta.getTitular().getApellidos());
         System.out.println("Saldo: " + formatearSaldo(cuenta.getSaldo()));
-        System.out.println("Fecha de creación: " + cuenta.getFechaCreacion().format(formatter));
+        System.out.println("Fecha de creacion: " + cuenta.getFechaCreacion().format(formatter));
     }
 
     private String formatearSaldo(double saldo) {
