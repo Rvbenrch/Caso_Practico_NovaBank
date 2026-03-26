@@ -20,12 +20,12 @@ public class MenuCliente {
         int opcion;
 
         do {
-            System.out.println("\n--- GESTIÓN DE CLIENTES ---");
+            System.out.println("\n--- GESTION DE CLIENTES ---");
             System.out.println("1. Crear cliente");
             System.out.println("2. Buscar cliente");
             System.out.println("3. Listar clientes");
             System.out.println("4. Volver");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opcion: ");
 
             opcion = Integer.parseInt(scanner.nextLine());
 

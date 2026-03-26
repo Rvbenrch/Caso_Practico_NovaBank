@@ -24,7 +24,7 @@ public class MenuOperaciones {
             System.out.println("2. Retirar dinero");
             System.out.println("3. Transferir dinero");
             System.out.println("4. Volver");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opcion: ");
 
             opcion = Integer.parseInt(scanner.nextLine());
 
@@ -50,7 +50,7 @@ public class MenuOperaciones {
 
     private void ingresar() {
         try {
-            System.out.print("Número de cuenta: ");
+            System.out.print("Numero de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             System.out.print("Cantidad a depositar: ");
@@ -58,7 +58,7 @@ public class MenuOperaciones {
 
             Cuenta cuenta = cuentaService.ingresar(numeroCuenta, cantidad);
 
-            System.out.println("\nDepósito realizado correctamente:");
+            System.out.println("\nDeposito realizado correctamente:");
             System.out.println("Cuenta: " + cuenta.getNumeroCuenta());
             System.out.println("Importe: +" + formatear(cantidad));
             System.out.println("Nuevo saldo: " + formatear(cuenta.getSaldo()));
@@ -70,7 +70,7 @@ public class MenuOperaciones {
 
     private void retirar() {
         try {
-            System.out.print("Número de cuenta: ");
+            System.out.print("Numero de cuenta: ");
             String numeroCuenta = scanner.nextLine();
 
             System.out.print("Cantidad a retirar: ");
@@ -90,10 +90,10 @@ public class MenuOperaciones {
 
     private void transferir() {
         try {
-            System.out.print("Número de cuenta origen: ");
+            System.out.print("Numero de cuenta origen: ");
             String origen = scanner.nextLine();
 
-            System.out.print("Número de cuenta destino: ");
+            System.out.print("Numero de cuenta destino: ");
             String destino = scanner.nextLine();
 
             System.out.print("Cantidad a transferir: ");
