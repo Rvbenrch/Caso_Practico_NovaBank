@@ -1,102 +1,48 @@
 package com.novabank.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.novabank.model.TipoMovimiento.*;
 
 public class Cuenta {
 
+    private Long id;
     private String numeroCuenta;
-    private Cliente titular;
+    private Long titularId;
     private double saldo;
     private LocalDateTime fechaCreacion;
-    private List<Movimiento> movimientos;
 
-    public Cuenta(Cliente titular, String numeroCuenta) {
-        this.titular = titular;
+    // Constructor vacío (requerido por JDBC)
+    public Cuenta() {}
+
+    // Constructor para CUENTAS NUEVAS (sin id)
+    public Cuenta(String numeroCuenta, Long titularId) {
         this.numeroCuenta = numeroCuenta;
-        this.fechaCreacion = LocalDateTime.now();
+        this.titularId = titularId;
         this.saldo = 0;
-        this.movimientos = new ArrayList<>();
+        this.fechaCreacion = LocalDateTime.now();
     }
 
-
-    // OPERACIONES DE NEGOCIO
-
-
-    public void ingresar(double cantidad) {
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad a ingresar debe ser mayor que 0");
-        }
-
-        this.saldo += cantidad;
-        movimientos.add(new Movimiento(DEPOSITO, cantidad));
+    // Constructor para CUENTAS QUE VIENEN DE LA BD
+    public Cuenta(Long id, String numeroCuenta, Long titularId, double saldo, LocalDateTime fechaCreacion) {
+        this.id = id;
+        this.numeroCuenta = numeroCuenta;
+        this.titularId = titularId;
+        this.saldo = saldo;
+        this.fechaCreacion = fechaCreacion;
     }
 
-    public void retirar(double cantidad) {
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad a retirar debe ser mayor que 0");
-        }
+    // GETTERS Y SETTERS
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-        if (this.saldo < cantidad) {
-            throw new IllegalArgumentException(
-                    "Saldo insuficiente. Disponible: " + this.saldo
-            );
-        }
+    public String getNumeroCuenta() { return numeroCuenta; }
+    public void setNumeroCuenta(String numeroCuenta) { this.numeroCuenta = numeroCuenta; }
 
-        this.saldo -= cantidad;
-        movimientos.add(new Movimiento(RETIRO, cantidad));
-    }
+    public Long getTitularId() { return titularId; }
+    public void setTitularId(Long titularId) { this.titularId = titularId; }
 
-    public void transferirA(Cuenta destino, double cantidad) {
-        if (destino == null) {
-            throw new IllegalArgumentException("La cuenta destino no puede ser null");
-        }
+    public double getSaldo() { return saldo; }
+    public void setSaldo(double saldo) { this.saldo = saldo; }
 
-        if (this.equals(destino)) {
-            throw new IllegalArgumentException("No puedes transferir a la misma cuenta");
-        }
-
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("Cantidad inválida");
-        }
-
-        if (this.saldo < cantidad) {
-            throw new IllegalArgumentException("Saldo insuficiente");
-        }
-
-        // Actualizar saldos directamente (SIN llamar a retirar/ingresar)
-        this.saldo -= cantidad;
-        destino.saldo += cantidad;
-
-        // Registrar SOLO movimientos de transferencia
-        this.movimientos.add(new Movimiento(TRANSFERENCIA_SALIENTE, cantidad));
-        destino.movimientos.add(new Movimiento(TRANSFERENCIA_ENTRANTE, cantidad));
-    }
-
-
-    // GETTERS
-
-
-    public String getNumeroCuenta() {
-        return numeroCuenta;
-    }
-
-    public Cliente getTitular() {
-        return titular;
-    }
-
-    public double getSaldo() {
-        return saldo;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public List<Movimiento> getMovimientos() {
-        return movimientos;
-    }
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 }
