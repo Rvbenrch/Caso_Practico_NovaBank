@@ -59,7 +59,6 @@ public class MenuConsultas {
         } while (opcion != 4);
     }
 
-
     private void consultarSaldo() {
         try {
             System.out.print("Introduzca numero de cuenta: ");
@@ -73,7 +72,6 @@ public class MenuConsultas {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
-
 
     private void historialMovimientos() {
         try {

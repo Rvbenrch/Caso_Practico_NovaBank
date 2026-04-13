@@ -2,10 +2,9 @@
 
 import com.novabank.model.Cliente;
 import com.novabank.model.Cuenta;
-import com.novabank.model.TipoMovimiento;
 import com.novabank.service.ClienteService;
 import com.novabank.service.ConsultaService;
-import com.novabank.service.CuentaService;
+import com.novabank.service.impl.CuentaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConsultaServiceTest {
 
     private ClienteService clienteService;
-    private CuentaService cuentaService;
+    private CuentaServiceImpl cuentaService;
     private ConsultaService consultaService;
 
     @BeforeEach
     void setup() {
         clienteService = new ClienteService(new com.novabank.repository.ClienteRepository());
-        cuentaService = new CuentaService(new com.novabank.repository.CuentaRepository(), clienteService);
+        cuentaService = new CuentaServiceImpl(new com.novabank.repository.CuentaRepository(), clienteService);
         consultaService = new ConsultaService(cuentaService);
     }
 

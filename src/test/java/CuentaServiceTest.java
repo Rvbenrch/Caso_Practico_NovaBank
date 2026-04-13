@@ -1,13 +1,12 @@
 
 
-import com.novabank.exception.ClienteNoEncontradoException;
 import com.novabank.exception.CuentaNoEncontrada;
 import com.novabank.model.Cliente;
 import com.novabank.model.Cuenta;
 import com.novabank.repository.ClienteRepository;
 import com.novabank.repository.CuentaRepository;
 import com.novabank.service.ClienteService;
-import com.novabank.service.CuentaService;
+import com.novabank.service.impl.CuentaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class CuentaServiceTest {
 
     private ClienteService clienteService;
-    private CuentaService cuentaService;
+    private CuentaServiceImpl cuentaService;
 
     @BeforeEach
     void setup() {
         ClienteRepository cr = new ClienteRepository();
         CuentaRepository cur = new CuentaRepository();
         clienteService = new ClienteService(cr);
-        cuentaService = new CuentaService(cur, clienteService);
+        cuentaService = new CuentaServiceImpl(cur, clienteService);
     }
 
     @Test

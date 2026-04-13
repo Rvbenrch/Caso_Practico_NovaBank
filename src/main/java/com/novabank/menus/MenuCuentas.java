@@ -4,7 +4,7 @@ import com.novabank.exception.ClienteNoEncontradoException;
 import com.novabank.model.Cliente;
 import com.novabank.model.Cuenta;
 import com.novabank.service.ClienteService;
-import com.novabank.service.CuentaService;
+import com.novabank.service.CuentaServiceInterface;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -13,10 +13,10 @@ import java.util.Scanner;
 public class MenuCuentas {
 
     private Scanner scanner;
-    private CuentaService cuentaService;
+    private CuentaServiceInterface cuentaService;
     private ClienteService clienteService;
 
-    public MenuCuentas(Scanner scanner, CuentaService cuentaService, ClienteService clienteService) {
+    public MenuCuentas(Scanner scanner, CuentaServiceInterface cuentaService, ClienteService clienteService) {
         this.scanner = scanner;
         this.cuentaService = cuentaService;
         this.clienteService = clienteService;
