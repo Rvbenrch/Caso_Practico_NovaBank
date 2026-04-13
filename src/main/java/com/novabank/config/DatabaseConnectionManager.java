@@ -12,10 +12,8 @@ public class DatabaseConnectionManager {
     private static final String USER = "postgres";
     private static final String PASSWORD = "655057621";
 
-    // Constructor privado para evitar instanciación externa
     private DatabaseConnectionManager() {}
 
-    // Singleton: única instancia global
     public static synchronized DatabaseConnectionManager getInstance() {
         if (instance == null) {
             instance = new DatabaseConnectionManager();
@@ -23,7 +21,6 @@ public class DatabaseConnectionManager {
         return instance;
     }
 
-    // Devuelve una nueva conexión por cada llamada
     public Connection getConnection() {
         try {
             return DriverManager.getConnection(URL, USER, PASSWORD);
