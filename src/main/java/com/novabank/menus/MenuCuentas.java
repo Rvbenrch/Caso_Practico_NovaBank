@@ -1,6 +1,7 @@
 package com.novabank.menus;
 
 import com.novabank.exception.ClienteNoEncontradoException;
+import com.novabank.model.Cliente;
 import com.novabank.model.Cuenta;
 import com.novabank.service.ClienteService;
 import com.novabank.service.CuentaService;
@@ -114,8 +115,10 @@ public class MenuCuentas {
     private void mostrarCuentaResumen(Cuenta cuenta) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+        Cliente titular = clienteService.encontrarPorId(cuenta.getTitularId());
+
         System.out.println("Numero de cuenta: " + cuenta.getNumeroCuenta());
-        System.out.println("Titular: " + cuenta.getTitular().getNombre() + " " + cuenta.getTitular().getApellidos());
+        System.out.println("Titular: " + titular.getNombre() + " " + titular.getApellidos());
         System.out.println("Saldo: " + formatearSaldo(cuenta.getSaldo()));
         System.out.println("Fecha de creacion: " + cuenta.getFechaCreacion().format(formatter));
     }
