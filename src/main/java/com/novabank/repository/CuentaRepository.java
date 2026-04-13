@@ -1,34 +1,18 @@
 package com.novabank.repository;
 
 import com.novabank.model.Cuenta;
+import java.util.List;
+import java.util.Optional;
 
-import java.util.*;
+public interface CuentaRepository {
 
-public class CuentaRepository {
+    Cuenta guardar(Cuenta cuenta);
 
-    private Map<String, Cuenta> cuentas = new HashMap<>();
+    Optional<Cuenta> buscarPorId(Long id);
 
-    public void guardar(Cuenta cuenta) {
-        cuentas.put(cuenta.getNumeroCuenta(), cuenta);
-    }
+    Optional<Cuenta> buscarPorNumero(String numeroCuenta);
 
-    public Cuenta buscarPorNumeroCuenta(String numeroCuenta) {
-        return cuentas.get(numeroCuenta);
-    }
+    List<Cuenta> listarPorCliente(Long clienteId);
 
-    public List<Cuenta> listarCuentas() {
-        return new ArrayList<>(cuentas.values());
-    }
-
-    public List<Cuenta> buscarPorClienteId(Long clienteId) {
-        List<Cuenta> resultado = new ArrayList<>();
-
-        for (Cuenta cuenta : cuentas.values()) {
-            if (cuenta.getTitular().getId().equals(clienteId)) {
-                resultado.add(cuenta);
-            }
-        }
-
-        return resultado;
-    }
+    void actualizarSaldo(Long cuentaId, double nuevoSaldo);
 }
