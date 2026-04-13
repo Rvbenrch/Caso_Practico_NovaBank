@@ -6,6 +6,10 @@ import com.novabank.menus.MenuCuentas;
 import com.novabank.menus.MenuOperaciones;
 import com.novabank.repository.ClienteRepository;
 import com.novabank.repository.CuentaRepository;
+import com.novabank.repository.MovimientoRepository;
+import com.novabank.repository.jdbc.ClienteRepositoryJdbc;
+import com.novabank.repository.jdbc.CuentaRepositoryJdbc;
+import com.novabank.repository.jdbc.MovimientoRepositoryJdbc;
 import com.novabank.service.ClienteService;
 import com.novabank.service.ConsultaService;
 import com.novabank.service.CuentaService;
@@ -18,14 +22,15 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        // REPOSITORIOS
-        ClienteRepository clienteRepository = new ClienteRepository();
-        CuentaRepository cuentaRepository = new CuentaRepository();
+        // REPOSITORIOS JDBC
+        ClienteRepository clienteRepository = new ClienteRepositoryJdbc();
+        CuentaRepository cuentaRepository = new CuentaRepositoryJdbc();
+        MovimientoRepository movimientoRepository = new MovimientoRepositoryJdbc();
 
         // SERVICIOS
         ClienteService clienteService = new ClienteService(clienteRepository);
-        CuentaService cuentaService = new CuentaService(cuentaRepository, clienteService);
-        ConsultaService consultaService = new ConsultaService(cuentaService);
+        CuentaService cuentaService = new CuentaService(cuentaRepository, clienteService, movimientoRepository);
+        ConsultaService consultaService = new ConsultaService(cuentaService, movimientoRepository);
 
         // MENÚS
         MenuCliente menuCliente = new MenuCliente(scanner, clienteService);
