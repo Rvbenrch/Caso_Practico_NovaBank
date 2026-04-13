@@ -1,5 +1,6 @@
 package com.novabank.service;
 
+import com.novabank.config.DatabaseConnectionManager;
 import com.novabank.exception.ClienteNoEncontradoException;
 import com.novabank.exception.CuentaNoEncontrada;
 import com.novabank.model.Cliente;
@@ -8,7 +9,13 @@ import com.novabank.model.Movimiento;
 import com.novabank.model.TipoMovimiento;
 import com.novabank.repository.CuentaRepository;
 import com.novabank.repository.MovimientoRepository;
+import com.novabank.service.strategy.IngresoStrategy;
+import com.novabank.service.strategy.OperacionContext;
+import com.novabank.service.strategy.RetiradaStrategy;
+import com.novabank.service.strategy.TransferenciaStrategy;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CuentaService {
@@ -57,17 +64,17 @@ public class CuentaService {
 
         Cuenta cuenta = buscarPorNumeroCuenta(numeroCuenta);
 
-        double nuevoSaldo = cuenta.getSaldo() + cantidad;
-        cuentaRepository.actualizarSaldo(cuenta.getId(), nuevoSaldo);
-        cuenta.setSaldo(nuevoSaldo);
+        // Strategy
+        OperacionContext ctx = new OperacionContext();
+        ctx.setStrategy(new IngresoStrategy());
+        ctx.ejecutar(cuenta, cantidad);
 
-        Movimiento movimiento = new Movimiento(
-                cuenta.getId(),
-                TipoMovimiento.DEPOSITO,
-                cantidad
+        // Persistencia
+        cuentaRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
+
+        movimientoRepository.guardar(
+                new Movimiento(cuenta.getId(), TipoMovimiento.DEPOSITO, cantidad)
         );
-
-        movimientoRepository.guardar(movimiento);
 
         return cuenta;
     }
@@ -76,50 +83,69 @@ public class CuentaService {
 
         Cuenta cuenta = buscarPorNumeroCuenta(numeroCuenta);
 
-        if (cuenta.getSaldo() < cantidad) {
-            throw new IllegalArgumentException("Saldo insuficiente.");
-        }
+        // Strategy
+        OperacionContext ctx = new OperacionContext();
+        ctx.setStrategy(new RetiradaStrategy());
+        ctx.ejecutar(cuenta, cantidad);
 
-        double nuevoSaldo = cuenta.getSaldo() - cantidad;
-        cuentaRepository.actualizarSaldo(cuenta.getId(), nuevoSaldo);
-        cuenta.setSaldo(nuevoSaldo);
+        // Persistencia
+        cuentaRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
 
-        Movimiento movimiento = new Movimiento(
-                cuenta.getId(),
-                TipoMovimiento.RETIRO,
-                cantidad
+        movimientoRepository.guardar(
+                new Movimiento(cuenta.getId(), TipoMovimiento.RETIRO, cantidad)
         );
-
-        movimientoRepository.guardar(movimiento);
 
         return cuenta;
     }
 
     public void transferir(String origen, String destino, double cantidad) {
 
-        Cuenta cuentaOrigen = buscarPorNumeroCuenta(origen);
-        Cuenta cuentaDestino = buscarPorNumeroCuenta(destino);
+        try (Connection conn = DatabaseConnectionManager.getInstance().getConnection()) {
 
-        if (cuentaOrigen.getSaldo() < cantidad) {
-            throw new IllegalArgumentException("Saldo insuficiente para realizar la transferencia.");
+            conn.setAutoCommit(false); // Inicio de transacción
+
+            try {
+                Cuenta cuentaOrigen = cuentaRepository
+                        .buscarPorNumero(origen, conn)
+                        .orElseThrow(() -> new CuentaNoEncontrada("Cuenta origen no encontrada"));
+
+                Cuenta cuentaDestino = cuentaRepository
+                        .buscarPorNumero(destino, conn)
+                        .orElseThrow(() -> new CuentaNoEncontrada("Cuenta destino no encontrada"));
+
+                // Strategy para ORIGEN
+                OperacionContext ctx = new OperacionContext();
+                ctx.setStrategy(new TransferenciaStrategy());
+                ctx.ejecutar(cuentaOrigen, cantidad);
+
+                // Strategy para DESTINO (es un ingreso)
+                ctx.setStrategy(new IngresoStrategy());
+                ctx.ejecutar(cuentaDestino, cantidad);
+
+                // Persistencia transaccional
+                cuentaRepository.actualizarSaldo(cuentaOrigen.getId(), cuentaOrigen.getSaldo(), conn);
+                cuentaRepository.actualizarSaldo(cuentaDestino.getId(), cuentaDestino.getSaldo(), conn);
+
+                movimientoRepository.guardar(
+                        new Movimiento(cuentaOrigen.getId(), TipoMovimiento.TRANSFERENCIA_SALIENTE, cantidad),
+                        conn
+                );
+
+                movimientoRepository.guardar(
+                        new Movimiento(cuentaDestino.getId(), TipoMovimiento.TRANSFERENCIA_ENTRANTE, cantidad),
+                        conn
+                );
+
+                conn.commit();
+
+            } catch (Exception e) {
+                conn.rollback();
+                throw new RuntimeException("Error en la transferencia: " + e.getMessage(), e);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error de conexión", e);
         }
-
-        double saldoOrigen = cuentaOrigen.getSaldo() - cantidad;
-        double saldoDestino = cuentaDestino.getSaldo() + cantidad;
-
-        cuentaRepository.actualizarSaldo(cuentaOrigen.getId(), saldoOrigen);
-        cuentaRepository.actualizarSaldo(cuentaDestino.getId(), saldoDestino);
-
-        cuentaOrigen.setSaldo(saldoOrigen);
-        cuentaDestino.setSaldo(saldoDestino);
-
-        movimientoRepository.guardar(
-                new Movimiento(cuentaOrigen.getId(), TipoMovimiento.TRANSFERENCIA_SALIENTE, cantidad)
-        );
-
-        movimientoRepository.guardar(
-                new Movimiento(cuentaDestino.getId(), TipoMovimiento.TRANSFERENCIA_ENTRANTE, cantidad)
-        );
     }
 
     private String generarNumeroCuenta() {

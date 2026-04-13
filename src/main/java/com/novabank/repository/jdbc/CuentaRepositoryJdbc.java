@@ -14,7 +14,8 @@ public class CuentaRepositoryJdbc implements CuentaRepository {
 
     @Override
     public Cuenta guardar(Cuenta cuenta) {
-        String sql = "INSERT INTO cuentas (numero_cuenta, titular_id, saldo, fecha_creacion) VALUES (?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO cuentas (numero_cuenta, titular_id, saldo, fecha_creacion) " +
+                "VALUES (?, ?, ?, ?) RETURNING id";
 
         try (Connection connection = DatabaseConnectionManager.getInstance().getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -78,6 +79,27 @@ public class CuentaRepositoryJdbc implements CuentaRepository {
         }
     }
 
+    // ✅ NUEVO: variante transaccional
+    @Override
+    public Optional<Cuenta> buscarPorNumero(String numeroCuenta, Connection conn) {
+        String sql = "SELECT * FROM cuentas WHERE numero_cuenta = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, numeroCuenta);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar cuenta por número (transacción)", e);
+        }
+    }
+
     @Override
     public List<Cuenta> listarPorCliente(Long clienteId) {
         String sql = "SELECT * FROM cuentas WHERE titular_id = ?";
@@ -113,6 +135,22 @@ public class CuentaRepositoryJdbc implements CuentaRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Error al actualizar saldo", e);
+        }
+    }
+
+
+    @Override
+    public void actualizarSaldo(Long cuentaId, double nuevoSaldo, Connection conn) {
+        String sql = "UPDATE cuentas SET saldo = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDouble(1, nuevoSaldo);
+            stmt.setLong(2, cuentaId);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al actualizar saldo (transacción)", e);
         }
     }
 

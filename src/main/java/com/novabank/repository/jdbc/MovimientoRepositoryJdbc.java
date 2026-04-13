@@ -37,6 +37,30 @@ public class MovimientoRepositoryJdbc implements MovimientoRepository {
         }
     }
 
+    // ✅ NUEVO: variante transaccional
+    @Override
+    public Movimiento guardar(Movimiento movimiento, Connection connection) {
+        String sql = "INSERT INTO movimientos (cuenta_id, tipo, importe, fecha) VALUES (?, ?, ?, ?) RETURNING id";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setLong(1, movimiento.getCuentaId());
+            stmt.setString(2, movimiento.getTipo().name());
+            stmt.setDouble(3, movimiento.getImporte());
+            stmt.setTimestamp(4, Timestamp.valueOf(movimiento.getFecha()));
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                movimiento.setId(rs.getLong("id"));
+            }
+
+            return movimiento;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al guardar movimiento en transacción", e);
+        }
+    }
+
     @Override
     public List<Movimiento> listarPorCuenta(Long cuentaId) {
         String sql = "SELECT * FROM movimientos WHERE cuenta_id = ? ORDER BY fecha DESC";
