@@ -8,7 +8,7 @@ public class DatabaseConnectionManager {
 
     private static DatabaseConnectionManager instance;
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/novaBank";
+    private static final String URL = "jdbc:postgresql://localhost:5432/novabank";
     private static final String USER = "postgres";
     private static final String PASSWORD = "655057621";
 
