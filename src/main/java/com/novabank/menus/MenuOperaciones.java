@@ -1,16 +1,16 @@
 package com.novabank.menus;
 
 import com.novabank.model.Cuenta;
-import com.novabank.service.CuentaService;
+import com.novabank.service.CuentaServiceInterface;
 
 import java.util.Scanner;
 
 public class MenuOperaciones {
 
     private Scanner scanner;
-    private CuentaService cuentaService;
+    private CuentaServiceInterface cuentaService;
 
-    public MenuOperaciones(Scanner scanner, CuentaService cuentaService) {
+    public MenuOperaciones(Scanner scanner, CuentaServiceInterface cuentaService) {
         this.scanner = scanner;
         this.cuentaService = cuentaService;
     }

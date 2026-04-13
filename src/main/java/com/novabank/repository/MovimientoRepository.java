@@ -10,8 +10,9 @@ public interface MovimientoRepository {
 
     Movimiento guardar(Movimiento movimiento);
 
+    Movimiento guardar(Movimiento movimiento, Connection connection);
+
     List<Movimiento> listarPorCuenta(Long cuentaId);
 
     List<Movimiento> listarPorCuentaYRango(Long cuentaId, LocalDate inicio, LocalDate fin);
-    Movimiento guardar(Movimiento movimiento, Connection conn);
 }
