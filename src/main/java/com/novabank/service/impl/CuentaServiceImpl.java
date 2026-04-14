@@ -3,6 +3,7 @@ package com.novabank.service.impl;
 import com.novabank.config.DatabaseConnectionManager;
 import com.novabank.exception.ClienteNoEncontradoException;
 import com.novabank.exception.CuentaNoEncontrada;
+import com.novabank.factory.MovimientoFactory;
 import com.novabank.model.Cliente;
 import com.novabank.model.Cuenta;
 import com.novabank.model.Movimiento;
@@ -77,7 +78,7 @@ public class CuentaServiceImpl implements CuentaServiceInterface {
         cuentaRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
 
         movimientoRepository.guardar(
-                new Movimiento(cuenta.getId(), TipoMovimiento.DEPOSITO, cantidad)
+                MovimientoFactory.crearIngreso(cuenta.getId(), cantidad)
         );
 
         return cuenta;
@@ -95,7 +96,7 @@ public class CuentaServiceImpl implements CuentaServiceInterface {
         cuentaRepository.actualizarSaldo(cuenta.getId(), cuenta.getSaldo());
 
         movimientoRepository.guardar(
-                new Movimiento(cuenta.getId(), TipoMovimiento.RETIRO, cantidad)
+                MovimientoFactory.crearRetirada(cuenta.getId(), cantidad)
         );
 
         return cuenta;
@@ -128,13 +129,11 @@ public class CuentaServiceImpl implements CuentaServiceInterface {
                 cuentaRepository.actualizarSaldo(cuentaDestino.getId(), cuentaDestino.getSaldo(), conn);
 
                 movimientoRepository.guardar(
-                        new Movimiento(cuentaOrigen.getId(), TipoMovimiento.TRANSFERENCIA_SALIENTE, cantidad),
-                        conn
+                        MovimientoFactory.crearTransferenciaSaliente(cuentaOrigen.getId(), cantidad)
                 );
 
                 movimientoRepository.guardar(
-                        new Movimiento(cuentaDestino.getId(), TipoMovimiento.TRANSFERENCIA_ENTRANTE, cantidad),
-                        conn
+                        MovimientoFactory.crearTransferenciaEntrante(cuentaDestino.getId(), cantidad)
                 );
 
                 conn.commit();
