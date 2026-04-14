@@ -100,13 +100,13 @@ public class ClienteRepositoryJdbc implements ClienteRepository {
     }
 
     private Cliente mapRow(ResultSet rs) throws SQLException {
-        return new Cliente(
-                rs.getLong("id"),
-                rs.getString("nombre"),
-                rs.getString("apellidos"),
-                rs.getString("dni"),
-                rs.getString("email"),
-                rs.getString("telefono")
-        );
+        return new Cliente.Builder()
+                .id(rs.getLong("id"))
+                .nombre(rs.getString("nombre"))
+                .apellidos(rs.getString("apellidos"))
+                .dni(rs.getString("dni"))
+                .email(rs.getString("email"))
+                .telefono(rs.getString("telefono"))
+                .build();
     }
 }

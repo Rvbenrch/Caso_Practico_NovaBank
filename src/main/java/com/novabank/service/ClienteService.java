@@ -25,7 +25,14 @@ public class ClienteService {
             throw new IllegalArgumentException("El email no tiene un formato válido. Formato esperado: ejemplo@dominio.com");
         }
 
-        Cliente cliente = new Cliente(nombre, apellidos, dni, email, telefono);
+        Cliente cliente = new Cliente.Builder()
+                .nombre(nombre)
+                .apellidos(apellidos)
+                .dni(dni)
+                .email(email)
+                .telefono(telefono)
+                .build();
+
         return repository.guardar(cliente);
     }
 
