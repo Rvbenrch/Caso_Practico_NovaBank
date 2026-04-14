@@ -66,7 +66,14 @@ public class MenuCliente {
             System.out.print("Teléfono: ");
             String telefono = scanner.nextLine();
 
-            Cliente cliente = clienteService.crearCliente(nombre, apellidos, dni, email, telefono);
+            Cliente cliente = new Cliente.Builder()
+                    .nombre(nombre)
+                    .apellidos(apellidos)
+                    .dni(dni)
+                    .email(email)
+                    .telefono(telefono)
+                    .build();
+
 
             System.out.println("\nCliente creado correctamente:");
             mostrarCliente(cliente);
