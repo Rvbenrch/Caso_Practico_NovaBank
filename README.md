@@ -79,9 +79,9 @@ CLIENTE   1 ─── N   CUENTA   1 ─── N   MOVIMIENTO
 
 ## Testing
 
-- ClienteServiceTest
-- CuentaServiceTest
-- ConsultaServiceTest
+- modulo1.ClienteServiceTest
+- modulo1.CuentaServiceTest
+- modulo1.ConsultaServiceTest
 
 Validación de lógica y control de errores
 
