@@ -49,11 +49,19 @@ class ClienteServiceTest {
 
     @Test
     void crearCliente_dniDuplicado_debeLanzarExcepcion() {
-        when(repository.buscarPorDni("12345678A"))
-                .thenReturn(Optional.of(mock(Cliente.class)));
+        String dni = "12345678A";
+
+        when(repository.buscarPorDni(dni))
+                .thenReturn(Optional.of(new Cliente.Builder()
+                        .nombre("Test")
+                        .apellidos("Test")
+                        .dni(dni)
+                        .email("test@test.com")
+                        .telefono("600000000")
+                        .build()));
 
         assertThrows(ClienteDuplicadoException.class, () ->
-                clienteService.crearCliente("Ruben", "Rodriguez", "12345678A",
+                clienteService.crearCliente("Ruben", "Rodriguez", dni,
                         "ruben@email.com", "600000001")
         );
     }
@@ -79,7 +87,15 @@ class ClienteServiceTest {
 
     @Test
     void listarClientes_debeRetornarLista() {
-        when(repository.listar()).thenReturn(List.of(mock(Cliente.class)));
+        Cliente cliente = new Cliente.Builder()
+                .nombre("Test")
+                .apellidos("Test")
+                .dni("00000000A")
+                .email("test@test.com")
+                .telefono("600000000")
+                .build();
+
+        when(repository.listar()).thenReturn(List.of(cliente));
 
         List<Cliente> lista = clienteService.listarClientes();
 

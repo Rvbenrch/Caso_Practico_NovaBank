@@ -79,7 +79,7 @@ public class CuentaRepositoryJdbc implements CuentaRepository {
         }
     }
 
-    // ✅ NUEVO: variante transaccional
+
     @Override
     public Optional<Cuenta> buscarPorNumero(String numeroCuenta, Connection conn) {
         String sql = "SELECT * FROM cuentas WHERE numero_cuenta = ?";

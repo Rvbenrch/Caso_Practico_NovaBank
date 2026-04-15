@@ -37,7 +37,7 @@ public class MovimientoRepositoryJdbc implements MovimientoRepository {
         }
     }
 
-    // ✅ NUEVO: variante transaccional
+
     @Override
     public Movimiento guardar(Movimiento movimiento, Connection connection) {
         String sql = "INSERT INTO movimientos (cuenta_id, tipo, importe, fecha) VALUES (?, ?, ?, ?) RETURNING id";
