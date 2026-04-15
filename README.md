@@ -279,6 +279,10 @@ src/
       ├── unit/
       └── integration/
 ```
+## Commits realizados en esta entrega:
+
+<img width="1374" height="596" alt="image" src="https://github.com/user-attachments/assets/19ef0f8c-0f84-491d-a022-9e5c08e836fe" />
+
 
 ---
 # Autor
