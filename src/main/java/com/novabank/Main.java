@@ -13,7 +13,7 @@ import com.novabank.repository.jdbc.MovimientoRepositoryJdbc;
 import com.novabank.service.ClienteService;
 import com.novabank.service.ConsultaService;
 import com.novabank.service.CuentaServiceInterface;
-import com.novabank.service.decorator.CuentaServiceLoggingDecorator;
+import com.novabank.service.decorator.CuentaServiceVisualDecorator;
 import com.novabank.service.impl.CuentaServiceImpl;
 
 import java.util.Scanner;
@@ -32,19 +32,17 @@ public class Main {
         // SERVICIOS
         ClienteService clienteService = new ClienteService(clienteRepository);
 
-        // Servicio real envuelto por el decorador
-        CuentaServiceInterface cuentaService =
-                new CuentaServiceLoggingDecorator(
+        // Servicio real envuelto por los decoradores (ESTE ES EL QUE SE USA)
+        CuentaServiceInterface servicio =
+                new CuentaServiceVisualDecorator(
                         new CuentaServiceImpl(cuentaRepository, clienteService, movimientoRepository)
                 );
 
-        ConsultaService consultaService = new ConsultaService(cuentaService, movimientoRepository);
-
-        // MENÚS
+        // MENÚS (todos usan "servicio")
         MenuCliente menuCliente = new MenuCliente(scanner, clienteService);
-        MenuCuentas menuCuentas = new MenuCuentas(scanner, cuentaService, clienteService);
-        MenuOperaciones menuOperaciones = new MenuOperaciones(scanner, cuentaService);
-        MenuConsultas menuConsultas = new MenuConsultas(scanner, consultaService);
+        MenuCuentas menuCuentas = new MenuCuentas(scanner, servicio, clienteService);
+        MenuOperaciones menuOperaciones = new MenuOperaciones(scanner, servicio);
+        MenuConsultas menuConsultas = new MenuConsultas(scanner, new ConsultaService(servicio, movimientoRepository));
 
         int opcion;
 
